@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="kk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AqyIAI — Demo</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+    ></script>
+
+    <!-- Tailwind (demo үшін) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React + ReactDOM (UMD) -->
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+
+    <!-- Babel (тек оқу/демо үшін, продакшнға жарамайды) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="min-h-screen bg-[#0d1b2a]">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useMemo, useState, useEffect } = React;
+
+      // ===== Тапсырмалар банкі ====================================================
+      const TASK_BANK = {
+        7: [
+          {
+            id: "7-1",
+            q: "3^2 + 4^2 \\text{ мәнін табыңыз}",
+            a: "25",
+            hint: "3^2 = 9, 4^2 = 16",
+          },
+          {
+            id: "7-2",
+            q: "\\text{Өрнекті ықшамдаңыз: } 5x + 2x",
+            a: "7x",
+          },
+          {
+            id: "7-3",
+            q: "\\text{Қабырғасы 6-ға тең квадраттың периметрін табыңыз: } P = 4a",
+            a: "24",
+          },
+          {
+            id: "7-4",
+            q: "\\text{Теңдеуді шешіңіз: } x + 8 = 13",
+            a: "5",
+          },
+          {
+            id: "7-5",
+            q: "\\text{Бөлшектерді қосыңыз: } \\frac{1}{2} + \\frac{1}{3} \\text{ (қысқартылған түрінде)}",
+            a: "5/6",
+          },
+          {
+            id: "7-6",
+            q: "\\text{150 санының 20\\%-ын табыңыз}",
+            a: "30",
+          },
+          {
+            id: "7-7",
+            q: "\\text{0.75 саны 0.3 санынан қаншаға артық?}",
+            a: "0.45",
+          },
+          {
+            id: "7-8",
+            q: "\\text{6 және 10 сандарының арифметикалық ортасын табыңыз}",
+            a: "8",
+          },
+          {
+            id: "7-9",
+            q: "\\text{6 және 8 сандарының ең кіші ортақ еселігін (ЕКОЕ) табыңыз}",
+            a: "24",
+          },
+          {
+            id: "7-10",
+            q: "\\text{Тікелей пропорция: } y = 3x, \\ x = 7 \\text{ болса, } y \\text{ мәнін табыңыз}",
+            a: "21",
+          },
+        ],
+
+        8: [
+          {
+            id: "8-1",
+            q: "\\text{Теңдеуді шешіңіз: } 2x - 5 = 9",
+            a: "7",
+          },
+          {
+            id: "8-2",
+            q: "\\text{144 санының квадрат түбірін табыңыз}",
+            a: "12",
+          },
+          {
+            id: "8-3",
+            q: "\\text{Өрнекті көбейткіштерге жіктеңіз: } x^2 - 9",
+            a: "(x-3)(x+3)",
+          },
+          {
+            id: "8-4",
+            q: "\\text{Үшбұрыштың екі бұрышы 60° және 30° болса,} \\\\ \\text{үшінші бұрышты табыңыз}",
+            a: "90",
+          },
+          {
+            id: "8-5",
+            q: "\\text{Координаталар жазықтығында (0,0) және (6,8) нүктелерінің} \\\\ \\text{арақашықтығын табыңыз}",
+            a: "10",
+          },
+          {
+            id: "8-6",
+            q: "a^2 \\cdot a^3",
+            a: "a^5",
+          },
+          {
+            id: "8-7",
+            q: "\\text{Функция } x^2 \\text{ туындысын табыңыз}",
+            a: "2x",
+          },
+          {
+            id: "8-8",
+            q: "\\text{Теңдеуді шешіңіз: } x / 3 = 5",
+            a: "15",
+          },
+          {
+            id: "8-9",
+            q: "\\text{200 теңгеге 15\\% жеңілдік жасалды. Жаңа бағаны табыңыз}",
+            a: "170",
+          },
+          {
+            id: "8-10",
+            q: "\\text{Радиусы 3-ке тең шеңбердің ауданын табыңыз}",
+            a: "9π",
+          },
+        ],
+
+        9: [
+          {
+            id: "9-1",
+            q: "\\text{Квадрат теңдеуді шешіңіз: }x^2 - 5x + 6 = 0 \\text{ (түбірлерін үтір арқылы жазыңыз)}",
+            a: "2,3",
+          },
+          {
+            id: "9-2",
+            q: "\\text{30° бұрышының синусын табыңыз}",
+            a: "0.5",
+          },
+          {
+            id: "9-3",
+            q: "\\log_{10}(1000)",
+            a: "3",
+          },
+          {
+            id: "9-4",
+            q: "\\text{Арифметикалық прогрессия: } a_1 = 2, d = 3. a_5 \\text{ мүшесін табыңыз}",
+            a: "14",
+          },
+          {
+            id: "9-5",
+            q: "\\text{Өрнекті көбейткіштерге жіктеңіз: } x^2 + 5x + 6",
+            a: "(x+2)(x+3)",
+          },
+          {
+            id: "9-6",
+            q: "\\text{60° бұрышының косинусын табыңыз}",
+            a: "0.5",
+          },
+          {
+            id: "9-7",
+            q: "\\text{Табаны 8, биіктігі 5 болатын үшбұрыштың ауданын табыңыз}",
+            a: "20",
+          },
+          {
+            id: "9-8",
+            q: "\\text{42 және 56 сандарының ең үлкен ортақ бөлгішін (ЕҮОБ) табыңыз}",
+            a: "14",
+          },
+          {
+            id: "9-9",
+            q: "3^x = 27",
+            a: "3",
+          },
+          {
+            id: "9-10",
+            q: "\\text{45° бұрышының тангенсін табыңыз}",
+            a: "1",
+          },
+        ],
+
+        10: [
+          {
+            id: "10-1",
+            q: "\\frac{d}{dx} (3x^2)",
+            a: "6x",
+          },
+          {
+            id: "10-2",
+            q: "\\int x \\, dx",
+            a: "x^2/2 + C",
+          },
+          {
+            id: "10-3",
+            q: "\\lim_{x \\to \\infty} \\frac{2x + 1}{x}",
+            a: "2",
+          },
+          {
+            id: "10-4",
+            q: "\\text{Коэффициенті 3-ке тең және (0,2) нүктесі арқылы өтетін} \\\\ \\text{түзу теңдеуін жазыңыз: } y = 3x + 2",
+            a: "y = 3x + 2",
+          },
+          {
+            id: "10-5",
+            q: "\\text{Теңдеу } x^2 - 4x + 1 = 0 \\text{ түбірлерінің қосындысын табыңыз}",
+            a: "4",
+          },
+          {
+            id: "10-6",
+            q: "\\text{y = x функциясының [0;2] аралығындағы} \\\\ \\text{астындағы ауданын табыңыз}",
+            a: "2",
+          },
+          {
+            id: "10-7",
+            q: "\\text{Матрицаның анықтауышын табыңыз: } [[1,2],[3,4]]",
+            a: "-2",
+          },
+          {
+            id: "10-8",
+            q: "\\text{Жорамал санды есептеңіз: } i^2",
+            a: "-1",
+          },
+          {
+            id: "10-9",
+            q: "\\text{x алдындағы коэффициентті табыңыз } (x+1)^2 \\text{ өрнегінде}",
+            a: "2",
+          },
+          {
+            id: "10-10",
+            q: "\\text{Монета лақтырылғанда елтаңба түсу ықтималдығын табыңыз}",
+            a: "0.5",
+          },
+        ],
+
+        11: [
+          {
+            id: "11-1",
+            q: "\\int \\frac{1}{x} \\, dx",
+            a: "ln|x| + C",
+          },
+          {
+            id: "11-2",
+            q: "\\lim_{x \\to 0} \\frac{\\sin x}{x}",
+            a: "1",
+          },
+          {
+            id: "11-3",
+            q: "\\frac{d}{dx} (e^x)",
+            a: "e^x",
+          },
+          {
+            id: "11-4",
+            q: "\\ln(e^3)",
+            a: "3",
+          },
+          {
+            id: "11-5",
+            q: "C(5,2)",
+            a: "10",
+          },
+          {
+            id: "11-6",
+            q: "\\text{Матрицаның ізін табыңыз: } [[2,0],[0,5]]",
+            a: "7",
+          },
+          {
+            id: "11-7",
+            q: "\\text{Кешенді санның модулін табыңыз: } |3 + 4i|",
+            a: "5",
+          },
+          {
+            id: "11-8",
+            q: "\\text{1-ден n-ге дейінгі сандардың қосындысының формуласын жазыңыз}",
+            a: "n(n+1)/2",
+          },
+          {
+            id: "11-9",
+            q: "\\frac{d}{dx} (\\ln x)",
+            a: "1/x",
+          },
+          {
+            id: "11-10",
+            q: "\\int \\cos x \\, dx",
+            a: "\\sin x + C",
+          },
+        ],
+      };
+
+      // ===== Көмекші функциялар (роутер) =========================================
+      const makeClassPath = (grade) => `/c/aqylai/grade-${grade}`;
+      const useRouterMock = () => {
+        const [path, setPath] = useState(
+          window.location.hash.replace("#", "") || "/",
+        );
+        useEffect(() => {
+          const onHash = () =>
+            setPath(window.location.hash.replace("#", "") || "/");
+          window.addEventListener("hashchange", onHash);
+          return () => window.removeEventListener("hashchange", onHash);
+        }, []);
+        const push = (p) => {
+          window.location.hash = p;
+        };
+        return { path, push };
+      };
+
+      // ===== UI компоненттері =====================================================
+      const Brand = ({ onHome }) => (
+        <div
+          onClick={onHome}
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
+          <div className="w-3 h-3 rounded-full bg-teal-400" />
+          <span className="text-teal-300 font-semibold tracking-wide">
+            AqyIAI
+          </span>
+        </div>
+      );
+
+      const TopNav = ({ onPrepClick, onProfile, onHome }) => (
+        <nav className="w-full max-w-6xl mx-auto flex items-center justify-between py-5 px-4">
+          <Brand onHome={onHome} />
+          <ul className="hidden md:flex items-center gap-8 text-slate-200/90">
+            <li>
+              <a href="#about" className="hover:text-white transition">
+                Біз туралы
+              </a>
+            </li>
+            <li>
+              <a href="#features" className="hover:text-white transition">
+                Мүмкіндіктер
+              </a>
+            </li>
+            <li>
+              <a href="#demo" className="hover:text-white transition">
+                Демо
+              </a>
+            </li>
+            <li>
+              <a href="#results" className="hover:text-white transition">
+                Нәтижелер
+              </a>
+            </li>
+            <li>
+              <a href="#contact" className="hover:text-white transition">
+                Байланыс
+              </a>
+            </li>
+          </ul>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onPrepClick}
+              className="hidden sm:inline-block px-4 py-2 rounded-2xl bg-slate-800/60 hover:bg-slate-700 text-sm text-slate-100"
+            >
+              ҰБТ-ға дайындық
+            </button>
+            <button
+              onClick={onProfile}
+              className="px-3 py-2 rounded-2xl bg-emerald-600/20 border border-emerald-400/40 text-emerald-200 text-sm"
+            >
+              Профиль
+            </button>
+            <span className="px-3 py-2 text-xs rounded-2xl bg-teal-500/20 text-teal-200">
+              ҚАЗ
+            </span>
+          </div>
+        </nav>
+      );
+
+      const Hero = ({ onStart }) => (
+        <section className="relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl" />
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center py-16 px-4">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold text-slate-100 leading-tight">
+                AqyIAI — <br />
+                ҰБТ-ға арналған тиімді дайындық
+              </h1>
+              <p className="mt-6 text-slate-300/90 max-w-xl">
+                Жылдамырақ үйрен, ақылдырақ жаттық, барысыңды бақыла — кез
+                келген жерде, кез келген уақытта.
+              </p>
+              <button
+                onClick={onStart}
+                className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-semibold shadow-lg"
+              >
+                Бастау
+              </button>
+            </div>
+            <div className="flex md:justify-end justify-center">
+              <div className="relative w-72 h-72 md:w-96 md:h-96 rounded-full bg-emerald-400/20 grid place-content-center">
+                <div className="w-28 h-28 rounded-full bg-pink-400/80" />
+                <div
+                  className="absolute -top-4 left-6 px-4 py-2 rounded-2xl bg-slate-900/70 backdrop-blur border border-white/10 text-slate-100 text-sm shadow"
+                  dangerouslySetInnerHTML={{
+                    __html: katex.renderToString("x^2 + y^2 = r^2", {
+                      throwOnError: false,
+                    }),
+                  }}
+                />
+                <div
+                  className="absolute bottom-10 left-8 px-4 py-2 rounded-2xl bg-slate-900/70 backdrop-blur border border-white/10 text-slate-100 text-sm shadow"
+                  dangerouslySetInnerHTML={{
+                    __html: katex.renderToString("\\lim_{x \\to \\infty}", {
+                      throwOnError: false,
+                    }),
+                  }}
+                />
+                <div
+                  className="absolute right-2 bottom-16 px-4 py-2 rounded-2xl bg-slate-900/70 backdrop-blur border border-white/10 text-slate-100 text-sm shadow"
+                  dangerouslySetInnerHTML={{
+                    __html: katex.renderToString("\\int f(x) \\, dx", {
+                      throwOnError: false,
+                    }),
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+
+      const GradePicker = ({ open, onClose, onPick }) => {
+        if (!open) return null;
+        const grades = [7, 8, 9, 10, 11];
+        return (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm grid place-items-center p-4">
+            <div className="w-full max-w-xl bg-slate-900/95 border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-slate-100">
+                  Сыныпты таңдаңыз (7–11)
+                </h3>
+                <button
+                  onClick={onClose}
+                  className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mt-6 grid grid-cols-5 gap-3">
+                {grades.map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => onPick(g)}
+                    className="aspect-square rounded-2xl bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-100 text-2xl font-bold"
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-5 text-sm text-slate-400">
+                Таңдағаннан кейін өз сыныбыңыздың тапсырмалар бөліміне өтесіз.
+              </p>
+            </div>
+          </div>
+        );
+      };
+
+      const TaskCard = ({ idx, task, onCheck, onAnswerChange }) => {
+        const [input, setInput] = useState("");
+        const [status, setStatus] = useState(null);
+        const normalized = (s) => s.replace(/\s+/g, "").toLowerCase();
+        const check = () => {
+          const ok = normalized(input) === normalized(task.a);
+          setStatus(ok);
+          onCheck?.(ok);
+        };
+        return (
+          <div className="p-5 rounded-2xl bg-slate-800/70 border border-white/10">
+            <div className="text-slate-300 text-sm">Тапсырма {idx + 1}</div>
+            <div
+              className="mt-2 text-slate-100 text-xl"
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(task.q, {
+                  throwOnError: false,
+                }),
+              }}
+            />
+            <input
+              className="mt-3 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
+              placeholder="Жауабыңыз"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                onAnswerChange?.(e.target.value);
+              }}
+            />
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={check}
+                className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-900 font-medium"
+              >
+                Тексеру
+              </button>
+              {task.hint && (
+                <span className="px-3 py-2 rounded-xl bg-slate-700 text-slate-200 text-sm">
+                  Кеңес: {task.hint}
+                </span>
+              )}
+            </div>
+            {status !== null && (
+              <div
+                className={`mt-3 text-sm ${status ? "text-emerald-400" : "text-rose-400"}`}
+              >
+                {status ? "Дұрыс! Жарайсыз." : `Қате. Дұрыс жауап: ${task.a}`}
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      const AssistantPanel = ({ task, userAnswer }) => {
+        const [why, setWhy] = useState("");
+        const [result, setResult] = useState(null);
+        const [loading, setLoading] = useState(false);
+        const [error, setError] = useState(null);
+
+        const ask = async () => {
+          setLoading(true);
+          setError(null);
+          setResult(null);
+          try {
+            const resp = await fetch("http://127.0.0.1:3000/api/ai", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                taskText: task?.q,
+                userAnswer: userAnswer || null,
+                lang: "kk",
+                extra: why || null,
+              }),
+            });
+            const data = await resp.json();
+            setResult(data);
+          } catch (e) {
+            setError(e?.message || "ЖИ-ден жауап алу мүмкін болмады");
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        return (
+          <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10">
+            <div className="text-slate-200 font-medium">ЖИ көмекші</div>
+            <div className="mt-2 text-slate-400 text-sm">
+              Қазіргі тапсырма:{" "}
+              <span className="text-slate-200">{task?.q ?? "—"}</span>
+            </div>
+            <textarea
+              className="mt-3 w-full min-h-24 px-3 py-2 rounded-xl bg-slate-800 border border-white/10 text-slate-100"
+              placeholder="Мысалы: менің әдісім неге қате? формула қалай шықты?"
+              value={why}
+              onChange={(e) => setWhy(e.target.value)}
+            />
+            <button
+              onClick={ask}
+              disabled={loading}
+              className="mt-3 px-4 py-2 rounded-xl bg-indigo-500 disabled:opacity-60 text-white"
+            >
+              {loading ? "Ойлануда…" : "Сұрау"}
+            </button>
+            {error && (
+              <div className="mt-3 p-3 rounded-xl bg-rose-900/40 text-rose-200 text-sm">
+                {error}
+              </div>
+            )}
+            {result && (
+              <div className="mt-3 p-3 rounded-xl bg-slate-800 text-slate-100 text-sm space-y-2">
+                {typeof result.correct === "boolean" && (
+                  <div
+                    className={
+                      result.correct ? "text-emerald-400" : "text-amber-300"
+                    }
+                  >
+                    {result.correct ? "Дұрыс" : "Әзірге дұрыс емес"}
+                  </div>
+                )}
+                {Array.isArray(result.steps) && result.steps.length > 0 && (
+                  <ol className="list-decimal pl-5 space-y-1">
+                    {result.steps.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ol>
+                )}
+                {result.short_hint && (
+                  <div className="text-slate-300">
+                    Кеңес: {result.short_hint}
+                  </div>
+                )}
+                {result.final_answer && (
+                  <div className="text-slate-200">
+                    Қорытынды: {result.final_answer}
+                  </div>
+                )}
+                {result.text && (
+                  <div className="text-slate-200 whitespace-pre-wrap">
+                    {result.text}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      const TasksView = ({ grade, onBack }) => {
+        const tasks = useMemo(() => TASK_BANK[grade] ?? [], [grade]);
+        const [current, setCurrent] = useState(0);
+        const [correct, setCorrect] = useState(0);
+        const [lastAnswer, setLastAnswer] = useState("");
+        const onCheck = (ok) => setCorrect((c) => (ok ? c + 1 : c));
+        const next = () => setCurrent((i) => Math.min(i + 1, tasks.length - 1));
+        const prev = () => setCurrent((i) => Math.max(i - 1, 0));
+        const progress = `${correct}/${tasks.length}`;
+
+        return (
+          <div className="max-w-6xl mx-auto py-10 px-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={onBack}
+                  className="px-3 py-2 rounded-xl bg-slate-800 text-slate-200"
+                >
+                  ← Артқа
+                </button>
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-100">
+                  {grade}-сынып: Тапсырмалар
+                </h2>
+              </div>
+              <div className="px-3 py-2 rounded-xl bg-slate-800 text-slate-200 text-sm">
+                Жетістік: {progress}
+              </div>
+            </div>
+
+            <div className="mt-6 grid md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 space-y-4">
+                <TaskCard
+                  idx={current}
+                  task={tasks[current]}
+                  onCheck={onCheck}
+                  onAnswerChange={setLastAnswer}
+                />
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={prev}
+                    className="px-4 py-2 rounded-xl bg-slate-700 text-slate-100"
+                  >
+                    Алдыңғы
+                  </button>
+                  <div className="text-slate-300 text-sm">
+                    {current + 1} / {tasks.length}
+                  </div>
+                  <button
+                    onClick={next}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 text-slate-900 font-semibold"
+                  >
+                    Келесі
+                  </button>
+                </div>
+              </div>
+              <AssistantPanel task={tasks[current]} userAnswer={lastAnswer} />
+            </div>
+          </div>
+        );
+      };
+
+      function AqyAIApp() {
+        const router = useRouterMock();
+        const [gradeModal, setGradeModal] = useState(false);
+
+        const atRoot = router.path === "/";
+        const match = router.path.match(/grade-(\d+)/);
+        const selectedGrade = match ? Number(match[1]) : null;
+
+        const goTasks = (grade) => {
+          router.push(makeClassPath(grade));
+          setGradeModal(false);
+        };
+
+        return (
+          <div className="min-h-screen text-white">
+            <TopNav
+              onPrepClick={() => setGradeModal(true)}
+              onProfile={() => alert("Бұл жерде профиль беті болады")}
+              onHome={() => router.push("/")}
+            />
+
+            {atRoot && (
+              <>
+                <Hero onStart={() => setGradeModal(true)} />
+
+                <section id="features" className="max-w-6xl mx-auto px-4 pb-14">
+                  <h3 className="text-2xl font-semibold text-slate-100">
+                    Негізгі мүмкіндіктер
+                  </h3>
+                  <div className="mt-6 grid md:grid-cols-3 gap-5">
+                    {[
+                      "Адаптивті тапсырмалар",
+                      "Лезде тексеру",
+                      "Прогресс және аналитика",
+                    ].map((t) => (
+                      <div
+                        key={t}
+                        className="p-5 rounded-2xl bg-slate-800/60 border border-white/10"
+                      >
+                        <div className="text-lg font-medium text-slate-100">
+                          {t}
+                        </div>
+                        <p className="mt-2 text-slate-300/90 text-sm">
+                          Өндірісте жеке оқу жолдары, таймерлер, есептер және
+                          экспорт болады.
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </>
+            )}
+
+            {selectedGrade && (
+              <TasksView
+                grade={selectedGrade}
+                onBack={() => router.push("/")}
+              />
+            )}
+
+            <GradePicker
+              open={gradeModal}
+              onClose={() => setGradeModal(false)}
+              onPick={goTasks}
+            />
+
+            <footer className="py-10 text-center text-slate-400 text-sm">
+              © {new Date().getFullYear()} AqyIAI. Demo build.
+            </footer>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<AqyAIApp />);
+    </script>
+  </body>
+</html>
