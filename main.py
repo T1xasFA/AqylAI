@@ -1,121 +1,213 @@
 from __future__ import annotations
 
+import ssl
 import json
+import logging
 import os
-import random
-from typing import Any, Dict, List, Optional
+import re
+from typing import Any, Dict, List, Literal, Optional
 
+import certifi
 import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 try:
-    from dotenv import load_dotenv  # type: ignore
+    from dotenv import load_dotenv  
     load_dotenv()
 except Exception:
     pass
 
-app = FastAPI()
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger("aqylai")
+
+GH_TOKEN = os.getenv("GH_MODELS_TOKEN") or os.getenv("GITHUB_TOKEN") or os.getenv("GITHUB_PAT")
+GH_MODEL = os.getenv("GH_MODELS_MODEL", "openai/gpt-4o-mini")
+GH_ORG = os.getenv("GH_MODELS_ORG") 
+GH_BASE = (os.getenv("GH_MODELS_BASE") or "https://models.github.ai").rstrip("/")
+
+VERIFY_SSL = os.getenv("VERIFY_SSL", "true").lower() != "false"
+VERIFY_SSL_MODE = os.getenv("VERIFY_SSL_MODE", "certifi").lower()  
+
+def build_verify() -> Any:
+    """
+    httpx verify parameter:
+      - False: disable verification (NOT recommended)
+      - str path: CA bundle path
+      - ssl.SSLContext: custom context
+    """
+    if not VERIFY_SSL:
+        return False
+    if VERIFY_SSL_MODE == "system":
+        return ssl.create_default_context()
+    return certifi.where()
+
+CORS_ORIGINS = os.getenv(
+    "CORS_ORIGINS",
+    "http://127.0.0.1:5500,http://localhost:5500,http://127.0.0.1:5173,http://localhost:5173",
+)
+ALLOWED_ORIGINS = [o.strip() for o in CORS_ORIGINS.split(",") if o.strip()]
+
+if not GH_TOKEN:
+    raise RuntimeError("No token found. Set GH_MODELS_TOKEN (or GITHUB_TOKEN/GITHUB_PAT).")
+
+def gh_url() -> str:
+    if GH_ORG:
+        return f"{GH_BASE}/orgs/{GH_ORG}/inference/chat/completions"
+    return f"{GH_BASE}/inference/chat/completions"
+
+app = FastAPI(title="AqylAI Tutor API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # demo
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# GitHub Models (из окружения/.env)
-GH_TOKEN = os.getenv("GH_MODELS_TOKEN") or os.getenv("GITHUB_TOKEN") or os.getenv("GITHUB_PAT")
-GH_MODEL = os.getenv("GH_MODELS_MODEL", "openai/gpt-4o-mini")
-GH_ORG = os.getenv("GH_MODELS_ORG")  # только если доступ через org
+Role = Literal["system", "developer", "user", "assistant"]
 
-
-def gh_url() -> str:
-    if GH_ORG:
-        return f"https://models.github.ai/orgs/{GH_ORG}/inference/chat/completions"
-    return "https://models.github.ai/inference/chat/completions"
-
+class ChatMsg(BaseModel):
+    role: Role
+    content: str
 
 class AIRequest(BaseModel):
     taskText: Optional[str] = None
-    userAnswer: Optional[str] = None
     expectedAnswer: Optional[str] = None
-    lang: Optional[str] = "kk"
-    extra: Optional[str] = None
+    userAnswer: Optional[str] = None
+    userMessage: Optional[str] = None
+    history: List[ChatMsg] = Field(default_factory=list)
+    lang: str = "en"
 
+class AIResponse(BaseModel):
+    correct: Optional[bool] = None
+    reply: str
+    short_hint: Optional[str] = None
+    steps: List[str] = Field(default_factory=list)
+    final_answer: Optional[str] = None
 
-def norm(s: Optional[str]) -> str:
-    return (s or "").strip().replace(" ", "").lower()
+def norm(s: str) -> str:
+    return re.sub(r"\s+", "", s).strip().lower()
 
+def clamp_history(history: List[ChatMsg], max_items: int = 14) -> List[ChatMsg]:
+    return history[-max_items:] if len(history) > max_items else history
 
-def ensure_schema(d: Dict[str, Any]) -> Dict[str, Any]:
-    d.setdefault("correct", False)
-    d.setdefault("steps", [])
-    d.setdefault("short_hint", "")
-    d.setdefault("final_answer", "")
-    d.setdefault("error_type", "logic")
-    d.setdefault("next_task_suggestion", "")
-    return d
+def safe_json_parse(content: str) -> Dict[str, Any]:
+    c = (content or "").strip()
+    c = re.sub(r"^\s*```(?:json)?\s*", "", c)
+    c = re.sub(r"\s*```\s*$", "", c)
 
-
-def extract_json(text: str) -> str:
-    if not text:
-        return text
-    s = text.find("{")
-    e = text.rfind("}")
-    if s == -1 or e == -1 or e < s:
-        return text
-    return text[s:e + 1]
-
-
-def parse_llm_output(raw: str) -> Dict[str, Any]:
-    raw = (raw or "").strip()
-    if not raw:
-        return {}
-
-    # 1) JSON целиком
     try:
-        obj = json.loads(raw)
-        if isinstance(obj, dict):
-            return obj
+        return json.loads(c)
     except Exception:
         pass
 
-    # 2) JSON внутри текста
-    try:
-        obj = json.loads(extract_json(raw))
-        if isinstance(obj, dict):
-            return obj
-    except Exception:
-        pass
+    m = re.search(r"\{.*\}", c, flags=re.S)
+    if m:
+        try:
+            return json.loads(m.group(0))
+        except Exception:
+            pass
 
-    # 3) fallback: текст -> steps
-    lines: List[str] = []
-    for line in raw.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        line = line.lstrip("-•* \t")
-        lines.append(line)
-
-    steps = lines[:8]
     return {
-        "steps": steps,
-        "short_hint": steps[0] if steps else raw[:120],
-        "final_answer": "",
-        "error_type": "logic",
-        "next_task_suggestion": "",
+        "correct": None,
+        "reply": c[:2000] if c else "Empty model response",
+        "short_hint": None,
+        "steps": [],
+        "final_answer": None,
     }
 
+def is_asking_final(text: str) -> bool:
+    if not text:
+        return False
+    t = text.lower()
+    patterns = [
+        r"\bsolve\b", r"\bgive me the answer\b", r"\bfinal answer\b",
+        r"\bреши\b", r"\bдай ответ\b", r"\bответ\b", r"\bреши полностью\b",
+        r"\bшешіп бер\b", r"\bшығарып бер\b", r"\bтолық жауап\b",
+    ]
+    return any(re.search(p, t) for p in patterns)
 
-async def call_github_models(messages: List[Dict[str, str]]) -> str:
-    if not GH_TOKEN:
-        raise HTTPException(
-            status_code=500,
-            detail="GH_MODELS_TOKEN not set. Put GitHub PAT (Models: Read) into backend/.env or env vars.",
-        )
+def looks_like_attempt(text: str) -> bool:
+    if not text:
+        return False
+    t = text.strip()
+    if re.search(r"[=]", t) and re.search(r"[0-9]", t):
+        return True
+    if re.search(r"\(.*\)\(.*\)", t):
+        return True
+    if re.search(r"\b(x|u|y)\s*=\s*[-+]?\d", t, flags=re.I):
+        return True
+    return False
+
+ZPD_SYSTEM = """
+You are a tutor using Lev Vygotsky's Zone of Proximal Development (ZPD).
+You must help the student with ONE short hint only.
+Never output step-by-step solutions.
+""".strip()
+
+@app.get("/health")
+async def health() -> Dict[str, Any]:
+    return {
+        "ok": True,
+        "model": GH_MODEL,
+        "base": GH_BASE,
+        "org": GH_ORG,
+        "verify_ssl": VERIFY_SSL,
+        "verify_ssl_mode": VERIFY_SSL_MODE,
+        "cors_origins": ALLOWED_ORIGINS,
+    }
+
+@app.post("/api/ai", response_model=AIResponse)
+async def ai(req: AIRequest) -> AIResponse:
+    correct: Optional[bool] = None
+    if req.expectedAnswer and req.userAnswer:
+        correct = (norm(req.expectedAnswer) == norm(req.userAnswer))
+
+    asked_final = is_asking_final(req.userMessage or "")
+    has_attempt = bool((req.userAnswer or "").strip())
+    for m in req.history:
+        if m.role == "user" and looks_like_attempt(m.content):
+            has_attempt = True
+            break
+    allow_final = bool(asked_final and has_attempt)
+
+    lang = (req.lang or "en").lower().strip()
+
+    context_lines = [
+        f"LANG={lang}",
+        f"TASK={req.taskText or '—'}",
+        f"EXPECTED={req.expectedAnswer or '—'}",
+        f"STUDENT_ANSWER={req.userAnswer or '—'}",
+        f"STUDENT_QUESTION={req.userMessage or '—'}",
+        f"SERVER_CORRECT={correct}",
+        f"ALLOW_FINAL={allow_final}",
+        "You MUST return a valid json object only (no markdown, no extra text).",
+        "Put ONE short hint sentence into key 'reply'.",
+        "Set 'steps' to an empty array []. Set 'short_hint' to null. Set 'final_answer' to null.",
+        "Keys: correct, reply, short_hint, steps, final_answer.",
+    ]
+
+    messages: List[Dict[str, str]] = [
+        {"role": "system", "content": ZPD_SYSTEM},
+        {"role": "developer", "content": "\n".join(context_lines)},
+    ]
+
+    for m in clamp_history(req.history):
+        messages.append({"role": m.role, "content": m.content})
+
+    user_msg = req.userMessage or ("Please give me one short hint." if lang == "en" else "Маған бір қысқа подсказка берші.")
+    messages.append({"role": "user", "content": user_msg})
+
+    payload: Dict[str, Any] = {
+        "model": GH_MODEL,
+        "messages": messages,
+        "temperature": 0.2,
+        "max_tokens": 220,
+        "response_format": {"type": "json_object"},
+    }
 
     headers = {
         "Accept": "application/vnd.github+json",
@@ -124,125 +216,43 @@ async def call_github_models(messages: List[Dict[str, str]]) -> str:
         "Content-Type": "application/json",
     }
 
-    payload: Dict[str, Any] = {
-        "model": GH_MODEL,
-        "messages": messages,
-        "temperature": 0.2,
-        "max_tokens": 700,
-        "response_format": {"type": "json_object"},
-    }
-
-    timeout = httpx.Timeout(60.0, connect=10.0)
-    async with httpx.AsyncClient(timeout=timeout) as client:
-        r = await client.post(gh_url(), headers=headers, json=payload)
-
-        # если 400 из-за response_format — пробуем без него
-        if r.status_code == 400:
-            payload2 = dict(payload)
-            payload2.pop("response_format", None)
-            r = await client.post(gh_url(), headers=headers, json=payload2)
-
-    if r.status_code >= 400:
-        try:
-            err = r.json()
-        except Exception:
-            err = {"raw": r.text}
-        raise HTTPException(status_code=502, detail={"github_models": err})
-
-    data = r.json()
-    return (data.get("choices", [{}])[0].get("message", {}).get("content", "") or "").strip()
-
-
-@app.post("/api/ai")
-async def ai_help(data: AIRequest):
-    language = "Kazakh" if (data.lang or "kk") == "kk" else "Russian"
-
-    system_msg = f"""
-You are a professional math tutor for grades 7–11.
-
-STRICT RULES:
-- Return ONLY a JSON object (no markdown, no code fences).
-- No LaTeX/backslashes "\\" in values. Use plain text math: x^2, (1/2), sqrt(2).
-- Keep steps clear and short.
-
-Language: {language}
-
-Return JSON:
-{{
-  "correct": true or false,
-  "steps": ["step 1", "step 2"],
-  "short_hint": "short hint",
-  "final_answer": "answer",
-  "error_type": "formula | arithmetic | logic | none",
-  "next_task_suggestion": "harder variation if correct"
-}}
-""".strip()
-
-    user_msg = f"""
-Task: {data.taskText}
-Student answer: {data.userAnswer}
-Expected answer (if known): {data.expectedAnswer}
-Student question: {data.extra}
-""".strip()
-
-    # детерминированная проверка, если expectedAnswer есть
-    deterministic_correct: Optional[bool] = None
-    if data.expectedAnswer is not None:
-        deterministic_correct = norm(data.userAnswer) == norm(data.expectedAnswer)
+    verify_arg: Any = build_verify()
 
     try:
-        raw = await call_github_models(
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": user_msg},
-            ]
+        async with httpx.AsyncClient(timeout=45, verify=verify_arg, trust_env=True) as client:
+            r = await client.post(gh_url(), headers=headers, json=payload)
+
+        if r.status_code >= 400:
+            raise HTTPException(status_code=502, detail=f"GitHub Models error {r.status_code}: {r.text}")
+
+        data = r.json()
+        content = data["choices"][0]["message"]["content"]
+        obj = safe_json_parse(content)
+
+        reply_text = (str(obj.get("reply", "") or "")).strip()
+        if not reply_text:
+            reply_text = "Бір қысқа подсказка: есепті жарты+жарты логикасымен ойлап көр."
+
+        return AIResponse(
+            correct=obj.get("correct", correct),
+            reply=reply_text,
+            short_hint=None,
+            steps=[],
+            final_answer=None,
         )
-        result = parse_llm_output(raw)
+
+    except HTTPException:
+        raise
     except Exception as e:
-        print("GITHUB MODELS ERROR:", repr(e))
-        result = {
-            "correct": False,
-            "steps": [],
-            "short_hint": "GitHub Models жауап бермеді немесе қате қайтарды",
-            "final_answer": data.expectedAnswer or "",
-            "error_type": "logic",
-            "next_task_suggestion": "",
-        }
-
-    result = ensure_schema(result)
-
-    if deterministic_correct is not None:
-        result["correct"] = deterministic_correct
-        if deterministic_correct:
-            result["error_type"] = "none"
-            if not result.get("final_answer"):
-                result["final_answer"] = data.expectedAnswer or ""
-
-    return result
-
-
-@app.get("/api/task")
-def generate_task(level: int = 1):
-    level = max(1, min(level, 4))
-
-    if level == 1:
-        a = random.randint(1, 20)
-        b = random.randint(1, 20)
-        return {"topic": "arithmetic", "level": level, "q": f"{a} + {b} =", "a": str(a + b)}
-
-    if level == 2:
-        x = random.randint(2, 10)
-        b = random.randint(1, 10)
-        res = 2 * x + b
-        return {"topic": "linear", "level": level, "q": f"Solve: 2x + {b} = {res}", "a": str(x)}
-
-    if level == 3:
-        t = random.randint(1, 10)
-        return {"topic": "algebra", "level": level, "q": f"Simplify: (x+{t})(x-{t})", "a": f"x^2 - {t*t}"}
-
-    return {"topic": "calculus", "level": level, "q": "Find derivative of x^2", "a": "2x"}
-
-
-@app.get("/")
-def health():
-    return {"status": "backend works", "engine": "github-models"}
+        log.exception("AI error")
+        fallback = (
+            "Sorry — server error occurred while contacting GitHub Models.\n"
+            "Try again, or check token/model/SSL settings."
+        )
+        return AIResponse(
+            correct=correct,
+            reply=fallback,
+            short_hint=str(e),
+            steps=[],
+            final_answer=None,
+        )
