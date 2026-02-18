@@ -1,0 +1,2409 @@
+<!doctype html>
+<html lang="kk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AqyIAI — Demo</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+    ></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-b from-[#0d1b2a] via-[#0b1f2f] to-[#06141d]"
+  >
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useMemo, useState, useEffect, useRef } = React;
+      const PROFILE_NAME = "";
+
+      const TASK_BANK = {
+        7: {
+          linear_equations: {
+            title: "Сызықтық теңдеулер",
+
+            easy: [
+              { id: "7-l-e1", q: "x + 4 = 9", a: "5", difficulty: 1 },
+              { id: "7-l-e2", q: "x - 3 = 6", a: "9", difficulty: 1 },
+              { id: "7-l-e3", q: "2x = 14", a: "7", difficulty: 1 },
+              { id: "7-l-e4", q: "x/3 = 5", a: "15", difficulty: 1 },
+              { id: "7-l-e5", q: "7 + x = 10", a: "3", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "7-l-m1", q: "3x + 2 = 11", a: "3", difficulty: 2 },
+              { id: "7-l-m2", q: "4x - 5 = 11", a: "4", difficulty: 2 },
+              { id: "7-l-m3", q: "5x + 5 = 20", a: "3", difficulty: 2 },
+              { id: "7-l-m4", q: "6x - 6 = 12", a: "3", difficulty: 2 },
+              { id: "7-l-m5", q: "2x + 7 = 15", a: "4", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "7-l-h1", q: "3x + 4 = 2x + 9", a: "5", difficulty: 3 },
+              { id: "7-l-h2", q: "5x - 2 = 3x + 8", a: "5", difficulty: 3 },
+              { id: "7-l-h3", q: "4(x - 2) = 8", a: "4", difficulty: 3 },
+              { id: "7-l-h4", q: "2(3x - 1) = 10", a: "2", difficulty: 3 },
+              { id: "7-l-h5", q: "7x + 5 = 3x + 17", a: "3", difficulty: 3 },
+            ],
+          },
+
+          fractions: {
+            title: "Бөлшектер",
+
+            easy: [
+              {
+                id: "7-f-e1",
+                q: "\\frac{1}{2} + \\frac{1}{2}",
+                a: "1",
+                difficulty: 1,
+              },
+              {
+                id: "7-f-e2",
+                q: "\\frac{3}{4} - \\frac{1}{4}",
+                a: "1/2",
+                difficulty: 1,
+              },
+              {
+                id: "7-f-e3",
+                q: "\\frac{2}{5} + \\frac{1}{5}",
+                a: "3/5",
+                difficulty: 1,
+              },
+              { id: "7-f-e4", q: "\\frac{6}{10}", a: "3/5", difficulty: 1 },
+              { id: "7-f-e5", q: "\\frac{4}{8}", a: "1/2", difficulty: 1 },
+            ],
+
+            medium: [
+              {
+                id: "7-f-m1",
+                q: "\\frac{1}{3} + \\frac{1}{6}",
+                a: "1/2",
+                difficulty: 2,
+              },
+              {
+                id: "7-f-m2",
+                q: "\\frac{3}{5} - \\frac{1}{10}",
+                a: "1/2",
+                difficulty: 2,
+              },
+              {
+                id: "7-f-m3",
+                q: "\\frac{2}{3} + \\frac{1}{4}",
+                a: "11/12",
+                difficulty: 2,
+              },
+              {
+                id: "7-f-m4",
+                q: "\\frac{5}{6} - \\frac{1}{3}",
+                a: "1/2",
+                difficulty: 2,
+              },
+              {
+                id: "7-f-m5",
+                q: "\\frac{7}{8} + \\frac{1}{4}",
+                a: "9/8",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "7-f-h1",
+                q: "\\frac{3}{4} + \\frac{5}{6}",
+                a: "19/12",
+                difficulty: 3,
+              },
+              {
+                id: "7-f-h2",
+                q: "\\frac{5}{8} - \\frac{1}{3}",
+                a: "7/24",
+                difficulty: 3,
+              },
+              {
+                id: "7-f-h3",
+                q: "\\frac{2}{5} + \\frac{7}{10}",
+                a: "11/10",
+                difficulty: 3,
+              },
+              {
+                id: "7-f-h4",
+                q: "\\frac{9}{10} - \\frac{3}{5}",
+                a: "3/10",
+                difficulty: 3,
+              },
+              {
+                id: "7-f-h5",
+                q: "\\frac{4}{9} + \\frac{2}{3}",
+                a: "10/9",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          percentages: {
+            title: "Пайыз",
+
+            easy: [
+              {
+                id: "7-p-e1",
+                q: "20\\% \\text{ of } 100",
+                a: "20",
+                difficulty: 1,
+              },
+              {
+                id: "7-p-e2",
+                q: "50\\% \\text{ of } 60",
+                a: "30",
+                difficulty: 1,
+              },
+              {
+                id: "7-p-e3",
+                q: "10\\% \\text{ of } 90",
+                a: "9",
+                difficulty: 1,
+              },
+              {
+                id: "7-p-e4",
+                q: "25\\% \\text{ of } 80",
+                a: "20",
+                difficulty: 1,
+              },
+              {
+                id: "7-p-e5",
+                q: "5\\% \\text{ of } 200",
+                a: "10",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              {
+                id: "7-p-m1",
+                q: "15\\% \\text{ of } 200",
+                a: "30",
+                difficulty: 2,
+              },
+              {
+                id: "7-p-m2",
+                q: "35\\% \\text{ of } 400",
+                a: "140",
+                difficulty: 2,
+              },
+              {
+                id: "7-p-m3",
+                q: "12\\% \\text{ of } 150",
+                a: "18",
+                difficulty: 2,
+              },
+              {
+                id: "7-p-m4",
+                q: "45\\% \\text{ of } 80",
+                a: "36",
+                difficulty: 2,
+              },
+              {
+                id: "7-p-m5",
+                q: "18\\% \\text{ of } 50",
+                a: "9",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "7-p-h1",
+                q: "240 \\text{ саны 20\\% артты. Жаңа мәні?}",
+                a: "288",
+                difficulty: 3,
+              },
+              {
+                id: "7-p-h2",
+                q: "500 \\text{ саны 10\\% кеміді. Жаңа мәні?}",
+                a: "450",
+                difficulty: 3,
+              },
+              {
+                id: "7-p-h3",
+                q: "120 \\text{ саны 25\\% артты}",
+                a: "150",
+                difficulty: 3,
+              },
+              {
+                id: "7-p-h4",
+                q: "300 \\text{ саны 15\\% кеміді}",
+                a: "255",
+                difficulty: 3,
+              },
+              {
+                id: "7-p-h5",
+                q: "80 \\text{ саны 50\\% артты}",
+                a: "120",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          rational_numbers: {
+            title: "Рационал сандар",
+
+            easy: [
+              { id: "7-r-e1", q: "-5 + 3", a: "-2", difficulty: 1 },
+              { id: "7-r-e2", q: "7 - 10", a: "-3", difficulty: 1 },
+              { id: "7-r-e3", q: "|-8|", a: "8", difficulty: 1 },
+              { id: "7-r-e4", q: "-4 + (-6)", a: "-10", difficulty: 1 },
+              { id: "7-r-e5", q: "9 + (-2)", a: "7", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "7-r-m1", q: "-3 \\times 4", a: "-12", difficulty: 2 },
+              { id: "7-r-m2", q: "-18 \\div 3", a: "-6", difficulty: 2 },
+              { id: "7-r-m3", q: "-7 + 12 - 5", a: "0", difficulty: 2 },
+              { id: "7-r-m4", q: "-2 \\times (-5)", a: "10", difficulty: 2 },
+              { id: "7-r-m5", q: "(-10) + 4", a: "-6", difficulty: 2 },
+            ],
+
+            hard: [
+              {
+                id: "7-r-h1",
+                q: "-3 \\times (-4) + 5",
+                a: "17",
+                difficulty: 3,
+              },
+              { id: "7-r-h2", q: "-15 \\div (-3) - 2", a: "3", difficulty: 3 },
+              { id: "7-r-h3", q: "-8 + 3 \\times 2", a: "-2", difficulty: 3 },
+              { id: "7-r-h4", q: "(-6)^2", a: "36", difficulty: 3 },
+              { id: "7-r-h5", q: "-4^2", a: "-16", difficulty: 3 },
+            ],
+          },
+
+          expressions: {
+            title: "Өрнектер",
+
+            easy: [
+              { id: "7-ex-e1", q: "3x + 2x", a: "5x", difficulty: 1 },
+              { id: "7-ex-e2", q: "7a - 3a", a: "4a", difficulty: 1 },
+              { id: "7-ex-e3", q: "5(2 + 3)", a: "25", difficulty: 1 },
+              { id: "7-ex-e4", q: "4x + 6 - 2x", a: "2x + 6", difficulty: 1 },
+              { id: "7-ex-e5", q: "2(3x)", a: "6x", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "7-ex-m1", q: "3(x + 2)", a: "3x + 6", difficulty: 2 },
+              { id: "7-ex-m2", q: "5x - (2x - 3)", a: "3x + 3", difficulty: 2 },
+              { id: "7-ex-m3", q: "2a + 3a - a", a: "4a", difficulty: 2 },
+              { id: "7-ex-m4", q: "(x + 4) - (x - 2)", a: "6", difficulty: 2 },
+              { id: "7-ex-m5", q: "4(2x - 1)", a: "8x - 4", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "7-ex-h1", q: "2(x + 3) - x", a: "x + 6", difficulty: 3 },
+              { id: "7-ex-h2", q: "3(2x - 1) + x", a: "7x - 3", difficulty: 3 },
+              {
+                id: "7-ex-h3",
+                q: "(2x + 5) - (x + 2)",
+                a: "x + 3",
+                difficulty: 3,
+              },
+              { id: "7-ex-h4", q: "5(x - 2) + 3", a: "5x - 7", difficulty: 3 },
+              {
+                id: "7-ex-h5",
+                q: "4a - 2(3a - 1)",
+                a: "-2a + 2",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          powers: {
+            title: "Дәреже",
+
+            easy: [
+              { id: "7-pow-e1", q: "2^3", a: "8", difficulty: 1 },
+              { id: "7-pow-e2", q: "5^2", a: "25", difficulty: 1 },
+              { id: "7-pow-e3", q: "10^2", a: "100", difficulty: 1 },
+              { id: "7-pow-e4", q: "3^3", a: "27", difficulty: 1 },
+              { id: "7-pow-e5", q: "4^2", a: "16", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "7-pow-m1", q: "2^4", a: "16", difficulty: 2 },
+              { id: "7-pow-m2", q: "(-3)^2", a: "9", difficulty: 2 },
+              { id: "7-pow-m3", q: "5^3", a: "125", difficulty: 2 },
+              { id: "7-pow-m4", q: "6^2", a: "36", difficulty: 2 },
+              { id: "7-pow-m5", q: "(-2)^3", a: "-8", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "7-pow-h1", q: "2^3 \\times 2^2", a: "32", difficulty: 3 },
+              { id: "7-pow-h2", q: "3^2 + 4^2", a: "25", difficulty: 3 },
+              { id: "7-pow-h3", q: "5^3 - 5^2", a: "100", difficulty: 3 },
+              { id: "7-pow-h4", q: "2^5 \\div 2^2", a: "8", difficulty: 3 },
+              { id: "7-pow-h5", q: "10^3 - 10^2", a: "900", difficulty: 3 },
+            ],
+          },
+        },
+
+        8: {
+          quadratic_roots: {
+            title: "Квадрат түбірлер",
+            easy: [
+              { id: "8-e1", q: "\\sqrt{144}", a: "12", difficulty: 1 },
+              { id: "8-e2", q: "\\sqrt{81}", a: "9", difficulty: 1 },
+            ],
+            medium: [{ id: "8-m1", q: "\\sqrt{225}", a: "15", difficulty: 2 }],
+            hard: [{ id: "8-h1", q: "x^2 = 49", a: "7", difficulty: 3 }],
+          },
+        },
+
+        9: {
+          quadratic: {
+            title: "Квадрат теңдеулер",
+            easy: [{ id: "9-e1", q: "x^2 - 4 = 0", a: "2", difficulty: 1 }],
+            medium: [
+              { id: "9-m1", q: "x^2 - 5x + 6 = 0", a: "2", difficulty: 2 },
+            ],
+            hard: [
+              { id: "9-h1", q: "2x^2 - 7x + 3 = 0", a: "3", difficulty: 3 },
+            ],
+          },
+        },
+
+        10: {
+          derivatives: {
+            title: "Туынды",
+            easy: [
+              { id: "10-e1", q: "\\frac{d}{dx}(x^2)", a: "2x", difficulty: 1 },
+            ],
+            medium: [
+              { id: "10-m1", q: "\\frac{d}{dx}(3x^2)", a: "6x", difficulty: 2 },
+            ],
+            hard: [
+              {
+                id: "10-h1",
+                q: "\\frac{d}{dx}(x^3)",
+                a: "3x^2",
+                difficulty: 3,
+              },
+            ],
+          },
+        },
+
+        11: {
+          integrals: {
+            title: "Интеграл",
+            easy: [
+              { id: "11-e1", q: "\\int x dx", a: "x^2/2 + C", difficulty: 1 },
+            ],
+            medium: [
+              { id: "11-m1", q: "\\int 2x dx", a: "x^2 + C", difficulty: 2 },
+            ],
+            hard: [
+              { id: "11-h1", q: "\\int x^2 dx", a: "x^3/3 + C", difficulty: 3 },
+            ],
+          },
+        },
+      };
+
+      const THEORY_BANK = {
+        7: [
+          {
+            id: "7-percent",
+            title: "Пайыз (Проценты)",
+            summary:
+              "Процент, нахождение процента от числа, число по проценту.",
+            sections: [
+              {
+                h: "Негізгі анықтама",
+                p: [
+                  "Процент — бұл жүзден бір бөлік: 1% = 1/100.",
+                  "p% = p/100",
+                ],
+              },
+              {
+                h: "Формулалар",
+                p: [
+                  "p% of a = a · p/100",
+                  "a is p% of b  ⇔  a = b · p/100",
+                  "Find b if a is p%:  b = a · 100/p",
+                ],
+              },
+            ],
+            example: {
+              q: "150 санының 20%-ын табыңыз",
+              steps: ["20% = 20/100", "150 · 20/100 = 30"],
+              ans: "30",
+            },
+          },
+          {
+            id: "7-fractions-add",
+            title: "Бөлшектерді қосу (Сложение дробей)",
+            summary: "Ортақ бөлім, алымдарды қосу, қысқарту.",
+            sections: [
+              {
+                h: "Алгоритм",
+                p: [
+                  "Ортақ бөлім табу (ЕКОЕ).",
+                  "Әр бөлшекті ортақ бөлімге келтіру.",
+                  "Алымдарды қосу, қысқарту.",
+                ],
+              },
+            ],
+            example: {
+              q: "1/2 + 1/3",
+              steps: ["Ортақ бөлім: 6", "3/6 + 2/6 = 5/6"],
+              ans: "5/6",
+            },
+          },
+        ],
+
+        8: [
+          {
+            id: "8-linear",
+            title: "Сызықтық теңдеу (Линейное уравнение)",
+            summary: "ax + b = c түрі.",
+            sections: [
+              {
+                h: "Алгоритм",
+                p: ["b мүшесін екінші жаққа өткізу.", "a коэффициентіне бөлу."],
+              },
+              {
+                h: "Ескерту",
+                p: ["Теңдеудің екі жағына бірдей амал жасауға болады."],
+              },
+            ],
+            example: {
+              q: "2x - 5 = 9",
+              steps: ["2x = 14", "x = 7"],
+              ans: "7",
+            },
+          },
+          {
+            id: "8-sq-diff",
+            title: "Квадрат айырмасы",
+            summary: "x^2 - a^2 = (x-a)(x+a)",
+            sections: [
+              {
+                h: "Формула",
+                p: ["x^2 - a^2 = (x-a)(x+a)"],
+              },
+              {
+                h: "Қолдану",
+                p: ["x^2 - 9 = x^2 - 3^2 = (x-3)(x+3)"],
+              },
+            ],
+            example: {
+              q: "x^2 - 9",
+              steps: ["9 = 3^2", "(x-3)(x+3)"],
+              ans: "(x-3)(x+3)",
+            },
+          },
+        ],
+
+        9: [
+          {
+            id: "9-quadratic",
+            title: "Квадрат теңдеу (Виет теоремасы)",
+            summary: "x^2 + px + q = 0 → x1+x2=-p, x1·x2=q",
+            sections: [
+              {
+                h: "Виет",
+                p: ["x^2 + px + q = 0", "x1 + x2 = -p", "x1 · x2 = q"],
+              },
+            ],
+            example: {
+              q: "x^2 - 5x + 6 = 0",
+              steps: ["x1+x2 = 5, x1·x2 = 6", "Түбірлер: 2 және 3"],
+              ans: "2, 3",
+            },
+          },
+        ],
+
+        10: [
+          {
+            id: "10-derivative",
+            title: "Туынды (Производная): негіздер",
+            summary: "d/dx(x^n)=n·x^(n-1)",
+            sections: [
+              { h: "Ереже", p: ["d/dx (x^n) = n·x^(n-1)", "d/dx (c) = 0"] },
+            ],
+            example: {
+              q: "d/dx (3x^2)",
+              steps: ["3·d/dx(x^2)", "3·2x = 6x"],
+              ans: "6x",
+            },
+          },
+        ],
+
+        11: [
+          {
+            id: "11-integral",
+            title: "Интеграл: негіздер",
+            summary: "∫x^n dx = x^(n+1)/(n+1) + C",
+            sections: [
+              {
+                h: "Формулалар",
+                p: [
+                  "∫ x^n dx = x^(n+1)/(n+1) + C,  n ≠ -1",
+                  "∫ 1/x dx = ln|x| + C",
+                ],
+              },
+            ],
+            example: {
+              q: "∫ x dx",
+              steps: ["n=1", "x^2/2 + C"],
+              ans: "x^2/2 + C",
+            },
+          },
+        ],
+      };
+
+      const makeClassPath = (grade) => `/c/aqylai/grade-${grade}`;
+      const makeTheoryPath = (grade) => `/c/aqylai/theory-${grade}`;
+      const makeTheoryLessonPath = (grade, lessonId) =>
+        `/c/aqylai/theory-${grade}/${lessonId}`;
+
+      const useRouterMock = () => {
+        const [path, setPath] = useState(
+          window.location.hash.replace("#", "") || "/",
+        );
+        useEffect(() => {
+          const onHash = () =>
+            setPath(window.location.hash.replace("#", "") || "/");
+          window.addEventListener("hashchange", onHash);
+          return () => window.removeEventListener("hashchange", onHash);
+        }, []);
+        const push = (p) => {
+          window.location.hash = p;
+        };
+        return { path, push };
+      };
+
+      const Brand = ({ onHome }) => (
+        <div
+          onClick={onHome}
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
+          <div className="w-3 h-3 rounded-full bg-teal-400" />
+          <span className="text-teal-300 font-semibold tracking-wide">
+            AqyIAI
+          </span>
+        </div>
+      );
+
+      const TopNav = ({ router, onScroll }) => {
+        const [scrolled, setScrolled] = React.useState(false);
+
+        React.useEffect(() => {
+          const handleScroll = () => {
+            setScrolled(window.scrollY > 40);
+          };
+          window.addEventListener("scroll", handleScroll);
+          return () => window.removeEventListener("scroll", handleScroll);
+        }, []);
+
+        const goHomeAndScroll = (id) => {
+          router.push("/");
+          setTimeout(() => {
+            document.getElementById(id)?.scrollIntoView({
+              behavior: "smooth",
+            });
+          }, 50);
+        };
+
+        return (
+          <nav
+            className={`
+                    fixed top-6 left-1/2 -translate-x-1/2 z-50
+                    transition-all duration-500 ease-in-out
+                    ${scrolled ? "w-[85%] py-3" : "w-[92%] py-5"}
+                    max-w-6xl
+                    backdrop-blur-2xl
+                    bg-[#0f172a]/80
+                    border border-white/10
+                    rounded-[50px]
+                    shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+                    px-10
+                    flex items-center justify-between
+                  `}
+          >
+            {/* LOGO */}
+            <div
+              onClick={() => router.push("/")}
+              className="cursor-pointer text-2xl font-bold text-white tracking-wide"
+            >
+              Aqyl<span className="text-emerald-400">AI</span>
+            </div>
+
+            {/* MENU */}
+            <div className="hidden md:flex items-center gap-10 text-gray-300 font-medium">
+              <button
+                onClick={() => goHomeAndScroll("about")}
+                className="hover:text-white transition"
+              >
+                Артықшылығымыз
+              </button>
+
+              <button
+                onClick={() => goHomeAndScroll("results")}
+                className="hover:text-white transition"
+              >
+                Оқушылардың нәтижелері
+              </button>
+
+              <button
+                onClick={() => {
+                  const g = Number(localStorage.getItem("aqylai_grade") || 8);
+                  router.push(`/c/aqylai/theory-${g}`);
+                }}
+                className="hover:text-white transition"
+              >
+                Теориялық мәліметтер
+              </button>
+
+              <button
+                onClick={() => goHomeAndScroll("contact")}
+                className="hover:text-white transition"
+              >
+                Миссиямыз
+              </button>
+            </div>
+
+            {/* PROFILE */}
+            <button
+              onClick={() => router.push("/profile")}
+              className="
+                      px-6 py-2 rounded-full
+                      bg-emerald-500 hover:bg-emerald-400
+                      text-black font-semibold
+                      transition-all duration-300
+                      shadow-[0_0_20px_rgba(16,185,129,.4)]
+                    "
+            >
+              Профиль
+            </button>
+          </nav>
+        );
+      };
+
+      const Hero = ({ onStart }) => (
+        <section className="relative overflow-hidden min-h-screen flex items-center pt-[70px]">
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl" />
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center py-24 px-6">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold text-slate-100 leading-tight">
+                AqylAI — <br />
+                Жасанды интеллектпен бейімделген оқу
+              </h1>
+              <p className="mt-6 text-slate-300/90 max-w-xl">
+                Жылдамырақ үйрен, ақылдырақ жаттық, барысыңды бақыла — кез
+                келген жерде, кез келген уақытта.
+              </p>
+              <button
+                onClick={onStart}
+                className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-semibold shadow-lg"
+              >
+                Бастау
+              </button>
+            </div>
+            <div className="flex md:justify-end justify-center">
+              <div className="relative w-80 h-80 md:w-[520px] md:h-[520px] rounded-full bg-emerald-400/20 grid place-content-center">
+                <div className="w-28 h-28 rounded-full bg-pink-400/80" />
+                <div
+                  className="absolute -top-4 left-6 px-4 py-2 rounded-2xl bg-slate-900/70 backdrop-blur border border-white/10 text-slate-100 text-sm shadow"
+                  dangerouslySetInnerHTML={{
+                    __html: katex.renderToString("x^2 + y^2 = r^2", {
+                      throwOnError: false,
+                    }),
+                  }}
+                />
+                <div
+                  className="absolute bottom-10 left-8 px-4 py-2 rounded-2xl bg-slate-900/70 backdrop-blur border border-white/10 text-slate-100 text-sm shadow"
+                  dangerouslySetInnerHTML={{
+                    __html: katex.renderToString("\\lim_{x \\to \\infty}", {
+                      throwOnError: false,
+                    }),
+                  }}
+                />
+                <div
+                  className="absolute right-2 bottom-16 px-4 py-2 rounded-2xl bg-slate-900/70 backdrop-blur border border-white/10 text-slate-100 text-sm shadow"
+                  dangerouslySetInnerHTML={{
+                    __html: katex.renderToString("\\int f(x) \\, dx", {
+                      throwOnError: false,
+                    }),
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+
+      const GradePicker = ({ open, onClose, onPick }) => {
+        if (!open) return null;
+        const grades = [7, 8, 9, 10, 11];
+        return (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm grid place-items-center p-4">
+            <div className="w-full max-w-xl bg-slate-900/95 border border-white/10 rounded-2xl p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-slate-100">
+                  Сыныпты таңдаңыз (7–11)
+                </h3>
+                <button
+                  onClick={onClose}
+                  className="px-3 py-1 rounded-lg bg-slate-800 text-slate-200"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mt-6 grid grid-cols-5 gap-3">
+                {grades.map((g) => (
+                  <button
+                    key={g}
+                    onClick={() => onPick(g)}
+                    className="aspect-square rounded-2xl bg-slate-800 hover:bg-slate-700 border border-white/10 text-slate-100 text-2xl font-bold"
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-5 text-sm text-slate-400">
+                Таңдағаннан кейін өз сыныбыңыздың тапсырмалар бөліміне өтесіз.
+              </p>
+            </div>
+          </div>
+        );
+      };
+
+      const TaskCard = ({
+        idx,
+        task,
+        onCheck,
+        onAnswerChange,
+        historyEntry,
+      }) => {
+        const [input, setInput] = useState("");
+        const [status, setStatus] = useState(null);
+
+        useEffect(() => {
+          if (historyEntry) {
+            setInput(historyEntry.answer);
+            setStatus(historyEntry.correct);
+          } else {
+            setInput("");
+            setStatus(null);
+          }
+        }, [task?.id]);
+
+        const normalized = (s) => s.replace(/\s+/g, "").toLowerCase();
+        const check = () => {
+          const ok = normalized(input) === normalized(task.a);
+          setStatus(ok);
+          onCheck?.(ok);
+        };
+
+        return (
+          <div className="p-5 rounded-2xl bg-slate-800/70 border border-white/10">
+            <div className="text-slate-300 text-sm">Тапсырма {idx + 1}</div>
+            <div
+              className="mt-2 text-slate-100 text-xl"
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(task.q, {
+                  throwOnError: false,
+                }),
+              }}
+            />
+            <input
+              className="mt-3 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
+              placeholder="Жауабыңыз"
+              value={input}
+              onChange={(e) => {
+                setInput(e.target.value);
+                onAnswerChange?.(e.target.value);
+              }}
+            />
+            <div className="mt-3 flex gap-2">
+              <button
+                onClick={check}
+                className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-900 font-medium"
+              >
+                Тексеру
+              </button>
+              {task.hint && (
+                <span className="px-3 py-2 rounded-xl bg-slate-700 text-slate-200 text-sm">
+                  Кеңес: {task.hint}
+                </span>
+              )}
+            </div>
+            {status !== null && (
+              <div
+                className={`mt-3 text-sm ${status ? "text-emerald-400" : "text-rose-400"}`}
+              >
+                {status ? "Дұрыс! Жарайсыз." : "Қате. Қайта ойланып көріңіз."}
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      const AssistantPanel = ({ task, userAnswer }) => {
+        const API_URL = "http://127.0.0.1:8000/api/ai";
+
+        const chatRef = useRef(null);
+
+        const [messages, setMessages] = useState([]);
+        const [text, setText] = useState("");
+        const [loading, setLoading] = useState(false);
+        const [err, setErr] = useState(null);
+        const [lastCorrect, setLastCorrect] = useState(null);
+
+        useEffect(() => {
+          setMessages([]);
+          setText("");
+          setErr(null);
+          setLoading(false);
+          setLastCorrect(null);
+        }, [task?.id]);
+
+        useEffect(() => {
+          if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+          }
+        }, [messages]);
+
+        const clearChat = () => {
+          setMessages([]);
+          setText("");
+          setErr(null);
+          setLastCorrect(null);
+        };
+
+        const renderTask = (q) => {
+          if (!q) return "—";
+          try {
+            return katex.renderToString(String(q), { throwOnError: false });
+          } catch {
+            return String(q)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+          }
+        };
+
+        const send = async (userMessage) => {
+          const clean = (userMessage || "").trim();
+          if (!clean || loading) return;
+
+          setErr(null);
+
+          const nextMessages = [...messages, { role: "user", content: clean }];
+          setMessages(nextMessages);
+
+          setText("");
+          setLoading(true);
+
+          try {
+            const payload = {
+              taskText: task?.q || null,
+              expectedAnswer: task?.a || null,
+              userAnswer: userAnswer || null,
+              userMessage: clean,
+              history: messages,
+              lang: "kk",
+            };
+
+            const resp = await fetch(API_URL, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            if (!resp.ok) {
+              const t = await resp.text();
+              throw new Error(`API ${resp.status}: ${t}`);
+            }
+
+            const data = await resp.json();
+
+            let assistantText =
+              data?.reply ||
+              data?.text ||
+              "Жауап бос болып қалды. Тағы бір рет сұрап көріңіз.";
+
+            if (Array.isArray(data?.steps) && data.steps.length) {
+              assistantText +=
+                "\n\nҚадамдар:\n" +
+                data.steps.map((s, i) => `${i + 1}) ${s}`).join("\n");
+            }
+            if (data?.short_hint)
+              assistantText += `\n\nКеңес: ${data.short_hint}`;
+            if (data?.final_answer)
+              assistantText += `\n\nҚорытынды: ${data.final_answer}`;
+
+            setLastCorrect(
+              data?.correct === true
+                ? true
+                : data?.correct === false
+                  ? false
+                  : null,
+            );
+
+            setMessages((prev) => [
+              ...prev,
+              { role: "assistant", content: assistantText },
+            ]);
+          } catch (e) {
+            setErr(e?.message || "Серверге қосылу мүмкін болмады");
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        const onSubmit = () => send(text);
+
+        const sendHint = () =>
+          send("Маған өте қысқа hint берші (жауапты толық айтпай).");
+
+        const sendCheckMistake = () =>
+          send("Менің қателігім қай жерде? Қысқаша көрсетші.");
+
+        const sendExplain = () =>
+          send("Түсінбей тұрмын. Бір қадаммен түсіндірші, мен жалғастырайын.");
+
+        return (
+          <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/10">
+            {/* header */}
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-indigo-400" />
+                <div className="text-slate-200 font-medium">
+                  ЖИ көмекші
+                  <span className="ml-2 text-xs px-2 py-1 rounded-lg bg-slate-800 text-slate-300">
+                    profile: {PROFILE_NAME}
+                  </span>
+                </div>
+              </div>
+
+              {/* badge correct/incorrect */}
+              <div
+                className={`text-xs px-3 py-1 rounded-full border ${
+                  lastCorrect === true
+                    ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-200"
+                    : lastCorrect === false
+                      ? "bg-rose-500/15 border-rose-500/30 text-rose-200"
+                      : "bg-slate-800/50 border-white/10 text-slate-300"
+                }`}
+              >
+                {lastCorrect === true
+                  ? "Дұрыс ✓"
+                  : lastCorrect === false
+                    ? "Қате ✕"
+                    : "—"}
+              </div>
+            </div>
+
+            {/* current task */}
+            <div className="mt-3 p-4 rounded-2xl bg-slate-950/30 border border-white/10">
+              <div className="text-slate-400 text-sm">Қазіргі тапсырма</div>
+              <div
+                className="mt-2 text-slate-100 text-xl"
+                dangerouslySetInnerHTML={{ __html: renderTask(task?.q) }}
+              />
+              <div className="mt-2 text-slate-400 text-sm">
+                Жауабыңыз:{" "}
+                <span className="text-slate-200">
+                  {userAnswer?.trim() ? userAnswer : "—"}
+                </span>
+              </div>
+            </div>
+
+            {/* quick buttons */}
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                onClick={sendHint}
+                disabled={loading}
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm disabled:opacity-60"
+              >
+                Hint
+              </button>
+              <button
+                onClick={sendExplain}
+                disabled={loading}
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm disabled:opacity-60"
+              >
+                Түсіндір
+              </button>
+              <button
+                onClick={sendCheckMistake}
+                disabled={loading}
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm disabled:opacity-60"
+              >
+                Қате қайда?
+              </button>
+              <button
+                onClick={clearChat}
+                disabled={loading}
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm disabled:opacity-60"
+              >
+                Тазарту
+              </button>
+            </div>
+
+            {/* chat window */}
+            <div
+              ref={chatRef}
+              className="mt-3 h-72 overflow-auto rounded-2xl bg-slate-950/40 border border-white/10 p-3 space-y-3"
+            >
+              {messages.length === 0 && (
+                <div className="text-slate-400 text-sm">
+                  Осында сұрағыңды жаз. Мысалы: “Неге қате?” немесе “Hint бер”.
+                </div>
+              )}
+
+              {messages.map((m, idx) => (
+                <div
+                  key={idx}
+                  className={`max-w-[92%] whitespace-pre-wrap text-sm px-3 py-2 rounded-2xl ${
+                    m.role === "user"
+                      ? "ml-auto bg-emerald-500/20 border border-emerald-400/30 text-emerald-100"
+                      : "mr-auto bg-slate-800/70 border border-white/10 text-slate-100"
+                  }`}
+                >
+                  {m.content}
+                </div>
+              ))}
+
+              {loading && (
+                <div className="text-slate-400 text-sm">Ойлануда…</div>
+              )}
+            </div>
+
+            {err && (
+              <div className="mt-3 p-3 rounded-xl bg-rose-900/40 text-rose-200 text-sm">
+                {err}
+              </div>
+            )}
+
+            {/* input */}
+            <textarea
+              className="mt-3 w-full min-h-20 px-3 py-2 rounded-xl bg-slate-800 border border-white/10 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+              placeholder="Сұрағыңды жаз… (Ctrl+Enter — жіберу)"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                  e.preventDefault();
+                  onSubmit();
+                }
+              }}
+            />
+
+            <button
+              onClick={onSubmit}
+              disabled={loading || !text.trim()}
+              className="mt-3 px-4 py-2 rounded-xl bg-indigo-500 disabled:opacity-60 text-white"
+            >
+              Жіберу (Ctrl+Enter)
+            </button>
+          </div>
+        );
+      };
+
+      const ProfileView = ({ onBack, onGoTasks }) => {
+        const [name, setName] = useState(
+          localStorage.getItem("aqylai_name") || "Оқушы",
+        );
+        const [grade, setGrade] = useState(
+          Number(localStorage.getItem("aqylai_grade") || 8),
+        );
+        const [goal, setGoal] = useState(
+          localStorage.getItem("aqylai_goal") || "ҰБТ-ға дайындық",
+        );
+
+        const save = () => {
+          localStorage.setItem("aqylai_name", name);
+          localStorage.setItem("aqylai_grade", String(grade));
+          localStorage.setItem("aqylai_goal", goal);
+          alert("Сақталды ✅");
+        };
+
+        return (
+          <div className="max-w-4xl mx-auto pt-[110px] pb-10 px-4">
+            <div className="flex items-center justify-between gap-4">
+              <button
+                onClick={onBack}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200"
+              >
+                ← Артқа
+              </button>
+
+              <div className="text-slate-200 text-sm px-3 py-2 rounded-xl bg-slate-800/60 border border-white/10">
+                Профиль
+              </div>
+            </div>
+
+            <div className="mt-6 p-6 rounded-2xl bg-slate-800/70 border border-white/10">
+              <h2 className="text-2xl font-bold text-slate-100">
+                Жеке профиль
+              </h2>
+              <p className="mt-2 text-slate-300 text-sm">
+                Бұл демо профиль: аты-жөні, сынып, мақсат. Деректер браузерде
+                сақталады (localStorage).
+              </p>
+
+              <div className="mt-6 grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm text-slate-300">Атыңыз</label>
+                  <input
+                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-slate-300">Сынып</label>
+                  <select
+                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
+                    value={grade}
+                    onChange={(e) => setGrade(Number(e.target.value))}
+                  >
+                    {[7, 8, 9, 10, 11].map((g) => (
+                      <option key={g} value={g}>
+                        {g}-сынып
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="text-sm text-slate-300">Мақсат</label>
+                  <input
+                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
+                    value={goal}
+                    onChange={(e) => setGoal(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-6 flex gap-2 flex-wrap">
+                <button
+                  onClick={save}
+                  className="px-5 py-2 rounded-xl bg-emerald-500 text-slate-900 font-semibold"
+                >
+                  Сақтау
+                </button>
+
+                <button
+                  onClick={() => onGoTasks?.(grade)}
+                  className="px-5 py-2 rounded-xl bg-indigo-500 text-white font-semibold"
+                >
+                  {grade}-сынып тапсырмаларына өту
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const TheoryView = ({
+        grade,
+        lessonId,
+        onBack,
+        onOpenLesson,
+        onPickGrade,
+      }) => {
+        const lessons = useMemo(() => THEORY_BANK[grade] || [], [grade]);
+        const [query, setQuery] = useState("");
+
+        const filtered = useMemo(() => {
+          const q = query.trim().toLowerCase();
+          if (!q) return lessons;
+          return lessons.filter(
+            (l) =>
+              l.title.toLowerCase().includes(q) ||
+              (l.summary || "").toLowerCase().includes(q),
+          );
+        }, [lessons, query]);
+
+        const activeLesson =
+          lessons.find((l) => l.id === lessonId) ||
+          filtered[0] ||
+          lessons[0] ||
+          null;
+
+        useEffect(() => {
+          if (activeLesson?.id) {
+            localStorage.setItem(
+              `aqylai_theory_last_${grade}`,
+              activeLesson.id,
+            );
+          }
+        }, [grade, activeLesson?.id]);
+
+        const renderLatex = (s) => {
+          try {
+            return katex.renderToString(String(s), { throwOnError: false });
+          } catch {
+            return String(s)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;");
+          }
+        };
+
+        return (
+          <div className="max-w-6xl mx-auto pt-[110px] pb-10 px-4">
+            <div className="flex items-center justify-between gap-4">
+              <button
+                onClick={onBack}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200"
+              >
+                ← Артқа
+              </button>
+
+              <div className="flex items-center gap-2">
+                <span className="text-slate-300 text-sm">Сынып:</span>
+                <select
+                  className="px-3 py-2 rounded-xl bg-slate-800 border border-white/10 text-slate-100"
+                  value={grade}
+                  onChange={(e) => onPickGrade(Number(e.target.value))}
+                >
+                  {[7, 8, 9, 10, 11].map((g) => (
+                    <option key={g} value={g}>
+                      {g}-сынып
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-6 grid md:grid-cols-3 gap-6">
+              {/* LEFT: темы */}
+              <div className="md:col-span-1 p-4 rounded-2xl bg-slate-900/60 border border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="text-slate-100 font-semibold">Тақырыптар</div>
+                  <span className="text-xs text-slate-400">
+                    {lessons.length}
+                  </span>
+                </div>
+
+                <input
+                  className="mt-3 w-full px-3 py-2 rounded-xl bg-slate-800 border border-white/10 text-slate-100"
+                  placeholder="Іздеу (поиск)…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+
+                <div className="mt-3 space-y-2 max-h-[60vh] overflow-auto pr-1">
+                  {filtered.map((l) => (
+                    <button
+                      key={l.id}
+                      onClick={() => onOpenLesson(l.id)}
+                      className={`w-full text-left px-3 py-2 rounded-xl border transition ${
+                        activeLesson?.id === l.id
+                          ? "bg-indigo-500/15 border-indigo-500/30 text-indigo-100"
+                          : "bg-slate-800/60 border-white/10 text-slate-200 hover:bg-slate-800"
+                      }`}
+                    >
+                      <div className="font-medium">{l.title}</div>
+                      {l.summary && (
+                        <div className="text-xs text-slate-400 mt-1">
+                          {l.summary}
+                        </div>
+                      )}
+                    </button>
+                  ))}
+
+                  {filtered.length === 0 && (
+                    <div className="text-slate-400 text-sm mt-2">
+                      Ештеңе табылмады.
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* RIGHT: конспект */}
+              <div className="md:col-span-2 p-6 rounded-2xl bg-slate-900/60 border border-white/10">
+                {!activeLesson ? (
+                  <div className="text-slate-300">Тақырып таңдаңыз.</div>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between gap-3">
+                      <h2 className="text-2xl font-bold text-slate-100">
+                        {activeLesson.title}
+                      </h2>
+                      <span className="px-3 py-1 rounded-full text-xs border bg-slate-800/60 border-white/10 text-slate-200">
+                        {grade}-сынып
+                      </span>
+                    </div>
+
+                    {activeLesson.summary && (
+                      <div className="mt-2 text-slate-300 text-sm">
+                        {activeLesson.summary}
+                      </div>
+                    )}
+
+                    <div className="mt-5 space-y-4">
+                      {(activeLesson.sections || []).map((sec, i) => (
+                        <div
+                          key={i}
+                          className="p-4 rounded-2xl bg-slate-800/60 border border-white/10"
+                        >
+                          <div className="text-slate-100 font-semibold">
+                            {sec.h}
+                          </div>
+                          <ul className="mt-2 space-y-2">
+                            {(sec.p || []).map((line, j) => (
+                              <li
+                                key={j}
+                                className="text-slate-100"
+                                dangerouslySetInnerHTML={{
+                                  __html: renderLatex("• " + line),
+                                }}
+                              />
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+
+                    {activeLesson.example && (
+                      <div className="mt-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 p-4">
+                        <div className="text-indigo-200 font-semibold">
+                          Мысал
+                        </div>
+                        <div
+                          className="mt-2 text-slate-100"
+                          dangerouslySetInnerHTML={{
+                            __html: renderLatex(activeLesson.example.q),
+                          }}
+                        />
+                        <ol className="mt-3 list-decimal pl-5 space-y-1 text-slate-100">
+                          {activeLesson.example.steps.map((s, k) => (
+                            <li
+                              key={k}
+                              dangerouslySetInnerHTML={{
+                                __html: renderLatex(s),
+                              }}
+                            />
+                          ))}
+                        </ol>
+                        <div className="mt-3 px-3 py-2 rounded-xl bg-slate-900/50 border border-white/10">
+                          <span className="text-slate-300">Жауап: </span>
+                          <span className="text-white">
+                            {activeLesson.example.ans}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const TopicsView = ({ grade, onBack, onPickTopic }) => {
+        const topics = TASK_BANK[grade] || {};
+
+        return (
+          <div className="max-w-6xl mx-auto mt-28 pb-10 px-4">
+            <button
+              onClick={onBack}
+              className="px-3 py-2 rounded-xl bg-slate-800 text-slate-200"
+            >
+              ← Артқа
+            </button>
+
+            <h2 className="mt-4 text-2xl font-bold text-slate-100">
+              {grade}-сынып: Тақырыптар
+            </h2>
+
+            <div className="mt-6 grid md:grid-cols-3 gap-4">
+              {Object.entries(topics).map(([key, topicData]) => {
+                const totalTasks =
+                  (topicData.easy?.length || 0) +
+                  (topicData.medium?.length || 0) +
+                  (topicData.hard?.length || 0);
+
+                const raw = localStorage.getItem(
+                  `aqylai_progress_${grade}_${key}`,
+                );
+
+                let solved = 0;
+                let zpd = 0;
+
+                if (raw) {
+                  const parsed = JSON.parse(raw);
+                  solved = parsed.solved || 0;
+                  zpd = parsed.zpd || 0;
+                }
+
+                const percent = totalTasks
+                  ? Math.round((solved / totalTasks) * 100)
+                  : 0;
+
+                return (
+                  <button
+                    key={key}
+                    onClick={() => onPickTopic(key)}
+                    className="p-5 rounded-2xl bg-slate-800/70 border border-white/10 text-slate-100 hover:bg-slate-700 transition"
+                  >
+                    <div className="font-semibold">{topicData.title}</div>
+
+                    <div className="mt-2 text-sm text-slate-300">
+                      {solved}/{totalTasks} ({percent}%)
+                    </div>
+
+                    <div className="mt-1 text-xs text-indigo-300">
+                      🧠 ZPD: {zpd}%
+                    </div>
+
+                    <div className="mt-2 w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-emerald-500 h-2"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      };
+      const TasksView = ({ grade, topic, onBack }) => {
+        const [history, setHistory] = useState({});
+
+        const topicData = TASK_BANK[grade]?.[topic];
+        const [checked, setChecked] = useState(false);
+
+        const levels = ["easy", "medium", "hard"];
+
+        const [levelIndex, setLevelIndex] = useState(0);
+        const [current, setCurrent] = useState(0);
+        const [correctCount, setCorrectCount] = useState(0);
+        const [streak, setStreak] = useState(0);
+        const [lastAnswer, setLastAnswer] = useState("");
+        const [zpdScore, setZpdScore] = useState(0);
+
+        if (!topicData) {
+          return (
+            <div className="p-10 text-slate-300">
+              Бұл тақырыпта тапсырма жоқ.
+            </div>
+          );
+        }
+
+        const level = levels[levelIndex];
+        const tasks = topicData[level] || [];
+
+        const totalTasks =
+          (topicData.easy?.length || 0) +
+          (topicData.medium?.length || 0) +
+          (topicData.hard?.length || 0);
+
+        const maxPossibleScore = totalTasks * 3;
+
+        const answered = Object.keys(history).length;
+        const correct = Object.values(history).filter((h) => h.correct).length;
+
+        const accuracy = answered > 0 ? correct / answered : 0;
+        const difficultyFactor = levelIndex + 1;
+
+        const zpdPercent = Math.min(
+          100,
+          Math.round(accuracy * difficultyFactor * 33),
+        );
+
+        const updateLevel = (isCorrect) => {
+          const newStreak = isCorrect ? streak + 1 : streak - 1;
+          setStreak(newStreak);
+
+          if (newStreak >= 2 && levelIndex < 2) {
+            setLevelIndex((prev) => prev + 1);
+            setStreak(0);
+            setCurrent(0);
+          }
+
+          if (newStreak <= -2 && levelIndex > 0) {
+            setLevelIndex((prev) => prev - 1);
+            setStreak(0);
+            setCurrent(0);
+          }
+        };
+        const onCheck = (ok) => {
+          const difficultyWeight = levelIndex + 1;
+
+          if (ok) {
+            setCorrectCount((prev) => prev + 1);
+            setZpdScore((prev) => prev + difficultyWeight);
+          }
+
+          const taskId = tasks[current].id;
+
+          setHistory((prev) => ({
+            ...prev,
+            [taskId]: {
+              answer: lastAnswer,
+              correct: ok,
+            },
+          }));
+
+          updateLevel(ok);
+        };
+
+        const next = () => {
+          const taskId = tasks[current].id;
+
+          if (!history[taskId]) return;
+
+          if (current < tasks.length - 1) {
+            setCurrent((i) => i + 1);
+          }
+        };
+
+        const prev = () => {
+          if (current > 0) {
+            setCurrent((i) => i - 1);
+          }
+        };
+
+        const solvedCount = Object.values(history).filter(
+          (h) => h.correct,
+        ).length;
+
+        const percent =
+          totalTasks > 0 ? Math.round((solvedCount / totalTasks) * 100) : 0;
+
+        useEffect(() => {
+          localStorage.setItem(
+            `aqylai_progress_${grade}_${topic}`,
+            JSON.stringify({
+              solved: correctCount,
+              total: totalTasks,
+              zpd: zpdPercent,
+            }),
+          );
+        }, [correctCount, zpdPercent, grade, topic]);
+
+        return (
+          <div className="max-w-6xl mx-auto pt-24 pb-10 px-4">
+            <button
+              onClick={onBack}
+              className="px-3 py-2 rounded-xl bg-slate-800 text-slate-200"
+            >
+              ← Артқа
+            </button>
+
+            <h2 className="mt-4 text-3xl font-bold text-slate-100">
+              {grade}-сынып • {topicData.title}
+            </h2>
+
+            <div className="mt-4 px-4 py-2 inline-block rounded-xl bg-indigo-500/20 border border-indigo-500/40">
+              Деңгей: <b>{level.toUpperCase()}</b>
+            </div>
+
+            {/* ===== TOP SECTION ===== */}
+            <div className="mt-6 grid md:grid-cols-3 gap-8 items-start">
+              {/* LEFT: Заголовок + Прогресс */}
+              <div className="md:col-span-2 space-y-6">
+                {/* ПРОГРЕСС */}
+                <div>
+                  <div className="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
+                    <div
+                      className="bg-emerald-500 h-3 transition-all duration-500"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+                  <div className="text-sm text-slate-300 mt-2">
+                    Жалпы прогресс: {percent}%
+                  </div>
+                </div>
+
+                {/* ZPD */}
+                <div>
+                  <div className="text-sm text-slate-300 mb-2">
+                    🧠 ZPD индекс: {zpdPercent}%
+                  </div>
+
+                  <div className="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
+                    <div
+                      className={`h-3 transition-all duration-700 ${
+                        zpdPercent < 40
+                          ? "bg-rose-500"
+                          : zpdPercent < 70
+                            ? "bg-yellow-500"
+                            : "bg-emerald-500"
+                      }`}
+                      style={{ width: `${zpdPercent}%` }}
+                    />
+                  </div>
+                </div>
+                {/* ===== TASK ===== */}
+                <div className="mt-8 space-y-6">
+                  <TaskCard
+                    idx={current}
+                    task={tasks[current]}
+                    onCheck={onCheck}
+                    onAnswerChange={setLastAnswer}
+                    historyEntry={history[tasks[current].id]}
+                  />
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={prev}
+                      disabled={current === 0}
+                      className={`px-4 py-2 rounded-xl ${
+                        current === 0
+                          ? "bg-slate-700 text-slate-400 cursor-not-allowed"
+                          : "bg-slate-600 text-white hover:bg-slate-500"
+                      }`}
+                    >
+                      Алдыңғы
+                    </button>
+
+                    <button
+                      onClick={next}
+                      disabled={
+                        !history[tasks[current].id]?.correct ||
+                        current === tasks.length - 1
+                      }
+                      className={`px-4 py-2 rounded-xl ${
+                        history[tasks[current].id]?.correct &&
+                        current !== tasks.length - 1
+                          ? "bg-emerald-600 text-black"
+                          : "bg-slate-700 text-slate-400 cursor-not-allowed"
+                      }`}
+                    >
+                      Келесі
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT: AI */}
+              <div className="sticky top-28">
+                <AssistantPanel task={tasks[current]} userAnswer={lastAnswer} />
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      function AqyAIApp() {
+        const [visible, setVisible] = useState(false);
+
+        useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+              if (entry.isIntersecting) setVisible(true);
+            },
+            { threshold: 0.3 },
+          );
+
+          const section = document.getElementById("results");
+          if (section) observer.observe(section);
+
+          return () => observer.disconnect();
+        }, []);
+
+        const getProgressKey = (grade, topic) =>
+          `aqylai_progress_${grade}_${topic}`;
+
+        const getTopicProgress = (grade, topic, total) => {
+          const raw = localStorage.getItem(getProgressKey(grade, topic));
+          if (!raw) return { solved: 0, total };
+          const parsed = JSON.parse(raw);
+          return { solved: parsed.solved || 0, total };
+        };
+
+        const saveTopicProgress = (grade, topic, solved, total) => {
+          localStorage.setItem(
+            getProgressKey(grade, topic),
+            JSON.stringify({ solved, total }),
+          );
+        };
+
+        const router = useRouterMock();
+        useEffect(() => {
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }, []);
+
+        const [gradeModal, setGradeModal] = useState(false);
+        const [activeCard, setActiveCard] = useState(1);
+        const cardsCount = 5;
+
+        const nextCard = () => {
+          setActiveCard((prev) => (prev + 1) % cardsCount);
+        };
+
+        const prevCard = () => {
+          setActiveCard((prev) => (prev - 1 + cardsCount) % cardsCount);
+        };
+
+        const atRoot = router.path === "/";
+        const atProfile = router.path === "/profile";
+
+        const match = router.path.match(/grade-(\d+)/);
+        const selectedGrade = match ? Number(match[1]) : null;
+
+        const topicMatch = router.path.match(/topic-([^\/]+)/);
+        const selectedTopic = topicMatch
+          ? decodeURIComponent(topicMatch[1])
+          : null;
+
+        const theoryMatch = router.path.match(
+          /^\/c\/aqylai\/theory-(\d+)(?:\/([\w-]+))?$/,
+        );
+        const theoryGrade = theoryMatch ? Number(theoryMatch[1]) : null;
+
+        const theoryLessonId =
+          theoryMatch?.[2] ||
+          (theoryGrade
+            ? localStorage.getItem(`aqylai_theory_last_${theoryGrade}`)
+            : null);
+
+        const goTopics = (grade) => {
+          router.push(`/c/aqylai/grade-${grade}/topics`);
+          setGradeModal(false);
+
+          setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }, 0);
+        };
+
+        const goTheory = () => {
+          const g = Number(localStorage.getItem("aqylai_grade") || 8);
+          router.push(makeTheoryPath(g));
+        };
+
+        return (
+          <div className="min-h-screen text-white/90 pt-27">
+            <TopNav router={router} />
+
+            {atRoot && (
+              <>
+                <Hero onStart={() => setGradeModal(true)} />
+                <section
+                  id="about"
+                  className="py-32 relative overflow-hidden bg-gradient-to-b from-[#0d1b2a] via-[#0b1f2f] to-[#06141d]"
+                >
+                  <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15),transparent_70%)]" />
+
+                  <div className="relative max-w-7xl mx-auto px-6">
+                    <h2 className="text-5xl font-bold text-center mb-24 text-white">
+                      AqylAI-дың басты артықшылықтары
+                    </h2>
+
+                    <div className="relative flex items-center justify-center">
+                      {/* LEFT BUTTON */}
+                      <button
+                        onClick={prevCard}
+                        className="absolute right-0 z-30 w-14 h-14 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 flex items-center justify-center text-xl text-white hover:bg-slate-700 transition"
+                      >
+                        →
+                      </button>
+
+                      {/* CARDS WRAPPER */}
+                      <div className="relative w-[900px] h-[500px] flex items-center justify-center overflow-hidden">
+                        {[
+                          {
+                            title: "Адаптивті деңгей",
+                            desc: "EASY → MEDIUM → HARD автоматты ауысу.",
+                            image:
+                              "https://images.unsplash.com/photo-1503676260728-1c00da094a0b",
+                          },
+                          {
+                            title: "Прогресс аналитикасы",
+                            desc: "ZPD индексі және даму динамикасы.",
+                            image:
+                              "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+                          },
+                          {
+                            title: "Қолжетімділік",
+                            desc: "Кез келген жерде, кез келген уақытта оқу.",
+                            image:
+                              "https://images.unsplash.com/photo-1492724441997-5dc865305da7",
+                          },
+                          {
+                            title: "ЖИ көмекші",
+                            desc: "Қадамдық түсіндіру және талдау.",
+                            image:
+                              "https://images.unsplash.com/photo-1518770660439-4636190af475",
+                          },
+                          {
+                            title: "Бәрі бір платформада",
+                            desc: "Теория, тест, аналитика бір жерде.",
+                            image:
+                              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
+                          },
+                        ].map((card, index) => {
+                          const position =
+                            (index - activeCard + cardsCount) % cardsCount;
+
+                          let transform = "";
+                          let zIndex = 0;
+                          let opacity = 0;
+
+                          if (position === 0) {
+                            transform = "translateX(0px) scale(1)";
+                            zIndex = 30;
+                            opacity = 1;
+                          } else if (position === 1) {
+                            transform = "translateX(400px) scale(0.85)";
+                            zIndex = 20;
+                            opacity = 0.7;
+                          } else if (position === 4) {
+                            transform = "translateX(-400px) scale(0.85)";
+                            zIndex = 20;
+                            opacity = 0.7;
+                          } else if (position === 2) {
+                            transform = "translateX(700px) scale(0.7)";
+                            zIndex = 10;
+                            opacity = 0.4;
+                          } else {
+                            transform = "translateX(-700px) scale(0.7)";
+                            zIndex = 10;
+                            opacity = 0.4;
+                          }
+
+                          return (
+                            <div
+                              key={index}
+                              className="absolute w-[420px] h-[520px] rounded-[40px] overflow-hidden
+                border border-white/10
+                shadow-[0_40px_120px_rgba(0,0,0,0.6)]
+                transition-all duration-700 ease-in-out"
+                              style={{
+                                transform,
+                                zIndex,
+                                opacity,
+                              }}
+                            >
+                              {/* Картинка */}
+                              <img
+                                src={card.image}
+                                alt={card.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                              />
+
+                              {/* Затемнение чтобы текст читался */}
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+
+                              {/* Контент */}
+                              <div className="absolute bottom-0 p-8 text-white">
+                                <h3 className="text-2xl font-bold mb-3">
+                                  {card.title}
+                                </h3>
+                                <p className="text-lg text-white/80">
+                                  {card.desc}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* RIGHT BUTTON */}
+                      <button
+                        onClick={nextCard}
+                        className="absolute left-0 z-30 w-14 h-14 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 flex items-center justify-center text-xl text-white hover:bg-slate-700 transition"
+                      >
+                        ←
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
+                <section
+                  id="results"
+                  className="py-32 relative overflow-hidden bg-gradient-to-b from-[#06141d] via-[#071c28] to-[#06141d]"
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.15),transparent_70%)]" />
+
+                  <div className="relative max-w-6xl mx-auto px-6 text-center">
+                    <h2 className="text-5xl font-bold text-white mb-20 tracking-tight">
+                      Нәтижелер
+                    </h2>
+
+                    <div className="grid md:grid-cols-3 gap-12">
+                      {[
+                        {
+                          value: "+35%",
+                          text: "Орташа нәтиже өсімі",
+                          color: "emerald",
+                        },
+                        {
+                          value: "ZPD",
+                          text: "Жақын даму аймағы",
+                          color: "indigo",
+                        },
+                        {
+                          value: "AI",
+                          text: "Интеллектуалды көмекші",
+                          color: "pink",
+                        },
+                      ].map((item, i) => (
+                        <div
+                          key={i}
+                          className="
+                      group relative p-12 rounded-[50px]
+                      bg-gradient-to-br from-white/10 to-white/5
+                      backdrop-blur-3xl border border-white/10
+                      transition-all duration-700
+                      hover:-translate-y-6
+                      hover:shadow-[0_0_80px_rgba(16,185,129,0.35)]
+                      "
+                        >
+                          {/* Glow circle */}
+                          <div
+                            className={`absolute -bottom-10 -right-10 w-40 h-40 bg-${item.color}-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition duration-700`}
+                          />
+
+                          {/* Value */}
+                          <div
+                            className={`
+                        text-6xl font-bold
+                        bg-gradient-to-r
+                        ${
+                          item.color === "emerald"
+                            ? "from-emerald-400 to-teal-300"
+                            : item.color === "indigo"
+                              ? "from-indigo-400 to-purple-400"
+                              : "from-pink-400 to-rose-400"
+                        }
+                        bg-clip-text text-transparent
+                        `}
+                          >
+                            {item.value}
+                          </div>
+
+                          {/* Text */}
+                          <div className="mt-6 text-slate-300 text-lg tracking-wide">
+                            {item.text}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                <section
+                  id="contact"
+                  className="relative py-40 overflow-hidden bg-gradient-to-b from-[#06141d] via-[#071a24] to-[#0b1f2f]"
+                >
+                  {/* Glow background */}
+                  <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-emerald-500/10 rounded-full blur-[180px]" />
+                  <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px]" />
+
+                  <div className="relative max-w-5xl mx-auto px-6 text-center">
+                    {/* Title */}
+                    <h2 className="text-5xl md:text-6xl font-bold text-white mb-10 tracking-tight">
+                      Миссиямыз
+                    </h2>
+
+                    {/* Glass Card */}
+                    <div className="relative p-14 rounded-[40px] bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.6)]">
+                      <p className="text-2xl md:text-3xl text-slate-200 leading-relaxed font-light">
+                        Қазақстандағы әрбір оқушыға{" "}
+                        <span className="text-emerald-400 font-semibold">
+                          интеллектуалды
+                        </span>
+                        ,{" "}
+                        <span className="text-indigo-400 font-semibold">
+                          бейімделмелі
+                        </span>{" "}
+                        және{" "}
+                        <span className="text-pink-400 font-semibold">
+                          сапалы
+                        </span>{" "}
+                        білім беру.
+                      </p>
+
+                      <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+                        <button
+                          onClick={() => setGradeModal(true)}
+                          className="px-10 py-4 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-lg shadow-[0_0_40px_rgba(16,185,129,.5)] transition duration-300"
+                        >
+                          Бастау
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            document.getElementById("about")?.scrollIntoView({
+                              behavior: "smooth",
+                            })
+                          }
+                          className="px-10 py-4 rounded-full bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition duration-300"
+                        >
+                          Артықшылықтарды көру
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </>
+            )}
+
+            {atProfile && (
+              <ProfileView
+                onBack={() => router.push("/")}
+                onGoTasks={(g) => goTopics(g)}
+              />
+            )}
+            {selectedGrade &&
+              !selectedTopic &&
+              router.path.includes("/topics") &&
+              !theoryGrade && (
+                <TopicsView
+                  grade={selectedGrade}
+                  onBack={() => router.push("/")}
+                  onPickTopic={(t) =>
+                    router.push(
+                      `/c/aqylai/grade-${selectedGrade}/topic-${encodeURIComponent(t)}`,
+                    )
+                  }
+                />
+              )}
+
+            {selectedGrade && selectedTopic && !theoryGrade && (
+              <TasksView
+                grade={selectedGrade}
+                topic={selectedTopic}
+                onBack={() =>
+                  router.push(`/c/aqylai/grade-${selectedGrade}/topics`)
+                }
+              />
+            )}
+
+            {theoryGrade && (
+              <TheoryView
+                grade={theoryGrade}
+                lessonId={theoryLessonId}
+                onBack={() => router.push("/")}
+                onPickGrade={(g) => router.push(makeTheoryPath(g))}
+                onOpenLesson={(id) =>
+                  router.push(makeTheoryLessonPath(theoryGrade, id))
+                }
+              />
+            )}
+
+            <GradePicker
+              open={gradeModal}
+              onClose={() => setGradeModal(false)}
+              onPick={goTopics}
+            />
+          </div>
+        );
+      }
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<AqyAIApp />);
+    </script>
+
+    <!-- <div class="flex items-center">
+                <div
+                  class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4"
+                >
+                  <svg
+                    class="w-6 h-6 text-green-600"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-800">Байланыс</div>
+                  <div class="text-gray-600">+7 (777) 77 77 77</div>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div
+                  class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4"
+                >
+                  <svg
+                    class="w-6 h-6 text-purple-600"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-800">Адрес</div>
+                  <div class="text-gray-600">Туркестан, Казакстан</div>
+                </div>
+              </div>
+            </div> -->
+
+    <section class="py-20 bg-[#06141d] text-white font-sans">
+      <div class="container mx-auto px-6">
+        <div
+          class="max-w-6xl mx-auto bg-[#0a1a24] rounded-[40px] shadow-2xl overflow-hidden border border-white/5 relative"
+        >
+          <div
+            class="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none"
+          >
+            <div
+              class="absolute -right-20 -top-20 w-[500px] h-[500px] bg-[#10b981]/10 rounded-full blur-[120px]"
+            ></div>
+            <div
+              class="absolute left-0 bottom-0 w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[100px]"
+            ></div>
+          </div>
+
+          <div class="grid md:grid-cols-2 relative z-10">
+            <div class="p-12 md:p-20 flex flex-col justify-center">
+              <h2
+                class="text-4xl md:text-5xl font-bold mb-6 leading-tight text-white"
+              >
+                AqylAI мүмкіндіктерін <br />
+                <span class="text-[#10b981]">ашқыңыз келе ме?</span>
+              </h2>
+
+              <p class="text-lg text-gray-400 mb-8 max-w-md leading-relaxed">
+                Біз сіздің барлық сұрағыңызға жауап береміз. Төмендегі форманы
+                толтырсаңыз, менеджер сізбен байланысқа шығады.
+              </p>
+
+              <div
+                class="bg-[#0f242e] rounded-3xl p-8 shadow-2xl max-w-md border border-white/5"
+              >
+                <form onsubmit="handleSubmit(event)" class="space-y-4">
+                  <div>
+                    <input
+                      class="w-full px-6 py-4 bg-[#06141d] border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-[#10b981] focus:outline-none transition-all placeholder-gray-500"
+                      id="name"
+                      type="text"
+                      placeholder="Аты-жөніңіз"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      class="w-full px-6 py-4 bg-[#06141d] border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-[#10b981] focus:outline-none transition-all placeholder-gray-500"
+                      id="phone"
+                      type="tel"
+                      placeholder="+7 (777) 777 77 77"
+                      required
+                    />
+                  </div>
+
+                  <div class="flex items-start space-x-2 py-2">
+                    <input
+                      type="checkbox"
+                      id="consent"
+                      checked
+                      class="mt-1 accent-[#10b981]"
+                    />
+                    <label for="consent" class="text-xs text-gray-400">
+                      <span class="underline text-[#10b981]"
+                        >Жеке деректерді</span
+                      >
+                      өңдеуге келісім беремін
+                    </label>
+                  </div>
+
+                  <button
+                    class="w-full bg-[#10b981] hover:bg-[#0da372] text-[#06141d] font-bold py-4 rounded-2xl transition duration-300 uppercase tracking-wide text-sm"
+                    type="submit"
+                  >
+                    Қатысуға өтінім қалдыру
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div
+              class="hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-[#10b981]/5 to-transparent relative"
+            >
+              <div class="relative w-72 h-72">
+                <div
+                  class="absolute inset-0 rounded-full flex items-center justify-center"
+                >
+                  <img
+                    src="./image/Gemini_Generated_Image_m9od0km9od0km9od-removebg-preview.png"
+                    alt="Logo"
+                    class="w-4/5 h-4/5 object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer
+        class="bg-[#06141d] text-gray-400 pt-20 pb-10 border-t border-white/5"
+      >
+        <div class="container mx-auto px-6">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-4 space-y-6">
+              <h3
+                class="text-2xl font-bold text-white tracking-tight flex items-center"
+              >
+                <span
+                  class="w-3 h-3 bg-[#10b981] rounded-full mr-3 shadow-[0_0_10px_#10b981]"
+                ></span>
+                Aqyl<span class="text-[#10b981]">AI</span>
+              </h3>
+              <p class="text-sm leading-relaxed max-w-sm text-gray-500">
+                ҰБТ-ға дайындықтың ең тиімді және ақылды жолы. Бізбен бірге
+                арманыңа жет.
+              </p>
+            </div>
+
+            <div class="md:col-span-2">
+              <h4
+                class="text-white font-bold mb-6 text-xs uppercase tracking-[0.2em]"
+              >
+                Платформа
+              </h4>
+              <ul class="space-y-4 text-sm">
+                <li>
+                  <a
+                    href="#"
+                    class="hover:text-[#10b981] transition-colors duration-300"
+                    >Біз туралы</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:text-[#10b981] transition-colors duration-300"
+                    >Жаңалықтар</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:text-[#10b981] transition-colors duration-300"
+                    >Біздің команда</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:text-[#10b981] transition-colors duration-300"
+                    >Миссиямыз</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="md:col-span-3">
+              <h4
+                class="text-white font-bold mb-6 text-xs uppercase tracking-[0.2em]"
+              >
+                Байланыс
+              </h4>
+              <div class="space-y-4 text-sm">
+                <p
+                  class="flex items-center hover:text-[#10b981] cursor-pointer transition-colors duration-300"
+                >
+                  <span class="text-[#10b981] mr-3"></span> +7 (777) 116 04 45
+                </p>
+              </div>
+            </div>
+
+            <div class="md:col-span-3">
+              <h4
+                class="text-white font-bold mb-6 text-xs uppercase tracking-[0.2em]"
+              >
+                Әлеуметтік желі
+              </h4>
+              <div class="flex space-x-3">
+                <a
+                  href="#"
+                  class="w-10 h-10 rounded-xl bg-[#0f242e] border border-white/5 flex items-center justify-center hover:border-[#10b981]/50 hover:text-[#10b981] transition-all duration-300"
+                  aria-label="Instagram"
+                >
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect
+                      x="2"
+                      y="2"
+                      width="20"
+                      height="20"
+                      rx="5"
+                      ry="5"
+                    ></rect>
+                    <path
+                      d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
+                    ></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </a>
+
+                <a
+                  href="#"
+                  class="w-10 h-10 rounded-xl bg-[#0f242e] border border-white/5 flex items-center justify-center hover:border-[#10b981]/50 hover:text-[#10b981] transition-all duration-300"
+                  aria-label="GitHub"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                    />
+                  </svg>
+                </a>
+
+                <a
+                  href="#"
+                  class="w-10 h-10 rounded-xl bg-[#0f242e] border border-white/5 flex items-center justify-center hover:border-[#10b981]/50 hover:text-[#10b981] transition-all duration-300"
+                >
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] tracking-[0.2em] uppercase text-white-600"
+          >
+            <p>&copy; 2026 AqylAI. Барлық құқықтар сақталған.</p>
+            <p class="mt-4 md:mt-0">
+              Made with <span class="text-[#10b981]">❤️</span> for students
+            </p>
+          </div>
+        </div>
+      </footer>
+    </section>
+  </body>
+</html>
