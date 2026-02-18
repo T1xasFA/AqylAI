@@ -865,7 +865,10 @@
       };
 
       const AssistantPanel = ({ task, userAnswer }) => {
-        const API_URL = "http://127.0.0.1:8000/api/ai";
+        const API_URL =
+  (location.hostname === "127.0.0.1" || location.hostname === "localhost")
+    ? "http://127.0.0.1:8000/api/ai"
+    : "https://backend-umur.onrender.com/api/ai";
 
         const chatRef = useRef(null);
 
@@ -2407,3 +2410,4 @@
     </section>
   </body>
 </html>
+
