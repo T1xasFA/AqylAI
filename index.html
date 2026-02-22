@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="kk">
+<html lang="kk" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AqyIAI</title>
+    <title>AqyIAI — Demo</title>
 
     <link
       rel="stylesheet"
@@ -26,8 +26,91 @@
     ></script>
 
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      .katex {
+        font-size: 1em;
+      }
+      .katex-display {
+        margin: 0;
+      }
+
+      :root {
+        --text-main: #e2e8f0;
+        --text-muted: #94a3b8;
+      }
+
+      html {
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-snap-type: y mandatory;
+}
+
+section {
+  scroll-snap-align: start;
+}
+
+
+      body {
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      h1 {
+        font-size: 2.8rem;
+      }
+      h2 {
+        font-size: 2.2rem;
+      }
+      h3 {
+        font-size: 1.5rem;
+      }
+      h4 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        line-height: 1.7;
+      }
+
+      @keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(16,185,129,0.25), transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: floatGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes floatGlow {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-45%, -55%) scale(1.2);
+  }
+}
+
+    </style>
   </head>
   <body
+
+  id="page"
     class="min-h-screen bg-gradient-to-b from-[#0d1b2a] via-[#0b1f2f] to-[#06141d]"
   >
     <div id="root"></div>
@@ -363,26 +446,473 @@
         },
 
         8: {
-          quadratic_roots: {
-            title: "Квадрат түбірлер",
+          square_roots: {
+            title: "Квадрат түбір",
+
             easy: [
-              { id: "8-e1", q: "\\sqrt{144}", a: "12", difficulty: 1 },
-              { id: "8-e2", q: "\\sqrt{81}", a: "9", difficulty: 1 },
+              { id: "8-sr-e1", q: "\\sqrt{25}", a: "5", difficulty: 1 },
+              { id: "8-sr-e2", q: "\\sqrt{49}", a: "7", difficulty: 1 },
+              { id: "8-sr-e3", q: "\\sqrt{64}", a: "8", difficulty: 1 },
+              { id: "8-sr-e4", q: "\\sqrt{81}", a: "9", difficulty: 1 },
+              { id: "8-sr-e5", q: "\\sqrt{100}", a: "10", difficulty: 1 },
             ],
-            medium: [{ id: "8-m1", q: "\\sqrt{225}", a: "15", difficulty: 2 }],
-            hard: [{ id: "8-h1", q: "x^2 = 49", a: "7", difficulty: 3 }],
+
+            medium: [
+              { id: "8-sr-m1", q: "2\\sqrt{9}", a: "6", difficulty: 2 },
+              { id: "8-sr-m2", q: "\\sqrt{36}+4", a: "10", difficulty: 2 },
+              { id: "8-sr-m3", q: "3\\sqrt{16}", a: "12", difficulty: 2 },
+              { id: "8-sr-m4", q: "\\sqrt{144}-5", a: "7", difficulty: 2 },
+              { id: "8-sr-m5", q: "4\\sqrt{25}", a: "20", difficulty: 2 },
+            ],
+
+            hard: [
+              {
+                id: "8-sr-h1",
+                q: "\\sqrt{81}+\\sqrt{16}",
+                a: "13",
+                difficulty: 3,
+              },
+              {
+                id: "8-sr-h2",
+                q: "\\sqrt{100}-\\sqrt{36}",
+                a: "4",
+                difficulty: 3,
+              },
+              { id: "8-sr-h3", q: "2\\sqrt{49}-3", a: "11", difficulty: 3 },
+              { id: "8-sr-h4", q: "5+\\sqrt{121}", a: "16", difficulty: 3 },
+              { id: "8-sr-h5", q: "\\sqrt{196}-8", a: "6", difficulty: 3 },
+            ],
+          },
+
+          quadratic_equations: {
+            title: "Квадрат теңдеулер",
+
+            easy: [
+              { id: "8-qe-e1", q: "x^2=16", a: "4", difficulty: 1 },
+              { id: "8-qe-e2", q: "x^2=9", a: "3", difficulty: 1 },
+              { id: "8-qe-e3", q: "x^2=25", a: "5", difficulty: 1 },
+              { id: "8-qe-e4", q: "x^2=49", a: "7", difficulty: 1 },
+              { id: "8-qe-e5", q: "x^2=64", a: "8", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "8-qe-m1", q: "x^2-4=0", a: "2", difficulty: 2 },
+              { id: "8-qe-m2", q: "x^2-9=0", a: "3", difficulty: 2 },
+              { id: "8-qe-m3", q: "x^2-16=0", a: "4", difficulty: 2 },
+              { id: "8-qe-m4", q: "x^2-25=0", a: "5", difficulty: 2 },
+              { id: "8-qe-m5", q: "x^2-36=0", a: "6", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "8-qe-h1", q: "x^2-5x+6=0", a: "2", difficulty: 3 },
+              { id: "8-qe-h2", q: "x^2-7x+10=0", a: "2", difficulty: 3 },
+              { id: "8-qe-h3", q: "x^2-9x+20=0", a: "4", difficulty: 3 },
+              { id: "8-qe-h4", q: "x^2-6x+8=0", a: "2", difficulty: 3 },
+              { id: "8-qe-h5", q: "x^2-4x+3=0", a: "1", difficulty: 3 },
+            ],
+          },
+
+          linear_function: {
+            title: "Сызықтық функция",
+
+            easy: [
+              { id: "8-lf-e1", q: "f(x)=2x, f(3)=?", a: "6", difficulty: 1 },
+              { id: "8-lf-e2", q: "f(x)=x+5, f(4)=?", a: "9", difficulty: 1 },
+              { id: "8-lf-e3", q: "f(x)=3x, f(2)=?", a: "6", difficulty: 1 },
+              { id: "8-lf-e4", q: "f(x)=x-2, f(5)=?", a: "3", difficulty: 1 },
+              { id: "8-lf-e5", q: "f(x)=4x, f(1)=?", a: "4", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "8-lf-m1", q: "y=2x+1, x=3", a: "7", difficulty: 2 },
+              { id: "8-lf-m2", q: "y=3x-2, x=4", a: "10", difficulty: 2 },
+              { id: "8-lf-m3", q: "y=5x+1, x=2", a: "11", difficulty: 2 },
+              { id: "8-lf-m4", q: "y=4x-3, x=5", a: "17", difficulty: 2 },
+              { id: "8-lf-m5", q: "y=6x+2, x=1", a: "8", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "8-lf-h1", q: "y=2x+3, x=7", a: "17", difficulty: 3 },
+              { id: "8-lf-h2", q: "y=5x-4, x=6", a: "26", difficulty: 3 },
+              { id: "8-lf-h3", q: "y=3x+5, x=8", a: "29", difficulty: 3 },
+              { id: "8-lf-h4", q: "y=7x-1, x=4", a: "27", difficulty: 3 },
+              { id: "8-lf-h5", q: "y=4x+9, x=3", a: "21", difficulty: 3 },
+            ],
+          },
+
+          quadratic_trinomial: {
+            title: "Квадрат үшмүше",
+
+            easy: [
+              {
+                id: "8-qt-e1",
+                q: "x^2 + 2x + 1",
+                a: "complete",
+                difficulty: 1,
+              },
+              {
+                id: "8-qt-e2",
+                q: "x^2 + 4x + 4",
+                a: "complete",
+                difficulty: 1,
+              },
+              {
+                id: "8-qt-e3",
+                q: "x^2 + 6x + 9",
+                a: "complete",
+                difficulty: 1,
+              },
+              {
+                id: "8-qt-e4",
+                q: "x^2 - 4x + 4",
+                a: "complete",
+                difficulty: 1,
+              },
+              {
+                id: "8-qt-e5",
+                q: "x^2 - 6x + 9",
+                a: "complete",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              { id: "8-qt-m1", q: "(x+2)^2", a: "x^2+4x+4", difficulty: 2 },
+              { id: "8-qt-m2", q: "(x+3)^2", a: "x^2+6x+9", difficulty: 2 },
+              { id: "8-qt-m3", q: "(x-4)^2", a: "x^2-8x+16", difficulty: 2 },
+              { id: "8-qt-m4", q: "(x+5)^2", a: "x^2+10x+25", difficulty: 2 },
+              { id: "8-qt-m5", q: "(x-2)^2", a: "x^2-4x+4", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "8-qt-h1", q: "x^2+5x+6", a: "factor", difficulty: 3 },
+              { id: "8-qt-h2", q: "x^2+7x+10", a: "factor", difficulty: 3 },
+              { id: "8-qt-h3", q: "x^2-3x-10", a: "factor", difficulty: 3 },
+              { id: "8-qt-h4", q: "x^2-5x+6", a: "factor", difficulty: 3 },
+              { id: "8-qt-h5", q: "x^2+9x+20", a: "factor", difficulty: 3 },
+            ],
+          },
+
+          statistics: {
+            title: "Статистика",
+
+            easy: [
+              { id: "8-st-e1", q: "Орташа мән: 2,4,6", a: "4", difficulty: 1 },
+              { id: "8-st-e2", q: "Орташа мән: 5,5,5", a: "5", difficulty: 1 },
+              { id: "8-st-e3", q: "Орташа мән: 1,2,3", a: "2", difficulty: 1 },
+              {
+                id: "8-st-e4",
+                q: "Орташа мән: 10,20,30",
+                a: "20",
+                difficulty: 1,
+              },
+              { id: "8-st-e5", q: "Орташа мән: 3,6,9", a: "6", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "8-st-m1", q: "Медиана: 1,3,5", a: "3", difficulty: 2 },
+              { id: "8-st-m2", q: "Медиана: 2,4,6,8", a: "5", difficulty: 2 },
+              { id: "8-st-m3", q: "Мода: 2,2,3,4", a: "2", difficulty: 2 },
+              { id: "8-st-m4", q: "Мода: 1,3,3,5", a: "3", difficulty: 2 },
+              { id: "8-st-m5", q: "Медиана: 5,7,9", a: "7", difficulty: 2 },
+            ],
+
+            hard: [
+              {
+                id: "8-st-h1",
+                q: "Орташа мән: 5,10,15,20",
+                a: "12.5",
+                difficulty: 3,
+              },
+              {
+                id: "8-st-h2",
+                q: "Орташа мән: 2,4,6,8",
+                a: "5",
+                difficulty: 3,
+              },
+              {
+                id: "8-st-h3",
+                q: "Орташа мән: 1,3,5,7,9",
+                a: "5",
+                difficulty: 3,
+              },
+              {
+                id: "8-st-h4",
+                q: "Медиана: 4,8,12,16",
+                a: "10",
+                difficulty: 3,
+              },
+              { id: "8-st-h5", q: "Мода: 1,1,2,3,3,3", a: "3", difficulty: 3 },
+            ],
+          },
+
+          probability: {
+            title: "Ықтималдық",
+
+            easy: [
+              {
+                id: "8-pr-e1",
+                q: "Тиын лақтыру. P(герб)?",
+                a: "1/2",
+                difficulty: 1,
+              },
+              {
+                id: "8-pr-e2",
+                q: "6 қырлы кубик. P(1)?",
+                a: "1/6",
+                difficulty: 1,
+              },
+              {
+                id: "8-pr-e3",
+                q: "6 қырлы кубик. P(жұп)?",
+                a: "1/2",
+                difficulty: 1,
+              },
+              {
+                id: "8-pr-e4",
+                q: "10 билет, 1 ұтыс. P?",
+                a: "1/10",
+                difficulty: 1,
+              },
+              {
+                id: "8-pr-e5",
+                q: "5 қыз, 5 ұл. P(қыз)?",
+                a: "1/2",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              { id: "8-pr-m1", q: "Кубик. P(>4)?", a: "1/3", difficulty: 2 },
+              { id: "8-pr-m2", q: "Кубик. P(<3)?", a: "1/3", difficulty: 2 },
+              {
+                id: "8-pr-m3",
+                q: "Кубик. P(3 немесе 6)?",
+                a: "1/3",
+                difficulty: 2,
+              },
+              { id: "8-pr-m4", q: "Кубик. P(тақ)?", a: "1/2", difficulty: 2 },
+              {
+                id: "8-pr-m5",
+                q: "4 қыз, 2 ұл. P(ұл)?",
+                a: "1/3",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "8-pr-h1",
+                q: "2 тиын. P(2 герб)?",
+                a: "1/4",
+                difficulty: 3,
+              },
+              {
+                id: "8-pr-h2",
+                q: "2 кубик. P(қосынды=7)?",
+                a: "1/6",
+                difficulty: 3,
+              },
+              {
+                id: "8-pr-h3",
+                q: "Кубик. P(1 немесе 2)?",
+                a: "1/3",
+                difficulty: 3,
+              },
+              {
+                id: "8-pr-h4",
+                q: "8 билет, 2 ұтыс. P?",
+                a: "1/4",
+                difficulty: 3,
+              },
+              {
+                id: "8-pr-h5",
+                q: "3 тиын. P(3 герб)?",
+                a: "1/8",
+                difficulty: 3,
+              },
+            ],
           },
         },
 
         9: {
-          quadratic: {
+          quadratic_equations: {
             title: "Квадрат теңдеулер",
-            easy: [{ id: "9-e1", q: "x^2 - 4 = 0", a: "2", difficulty: 1 }],
-            medium: [
-              { id: "9-m1", q: "x^2 - 5x + 6 = 0", a: "2", difficulty: 2 },
+
+            easy: [
+              { id: "9-qe-e1", q: "x^2=9", a: "3", difficulty: 1 },
+              { id: "9-qe-e2", q: "x^2=16", a: "4", difficulty: 1 },
+              { id: "9-qe-e3", q: "x^2=25", a: "5", difficulty: 1 },
+              { id: "9-qe-e4", q: "x^2=49", a: "7", difficulty: 1 },
+              { id: "9-qe-e5", q: "x^2=64", a: "8", difficulty: 1 },
             ],
+
+            medium: [
+              { id: "9-qe-m1", q: "x^2-4=0", a: "2", difficulty: 2 },
+              { id: "9-qe-m2", q: "x^2-9=0", a: "3", difficulty: 2 },
+              { id: "9-qe-m3", q: "x^2-5x+6=0", a: "2", difficulty: 2 },
+              { id: "9-qe-m4", q: "x^2-7x+10=0", a: "2", difficulty: 2 },
+              { id: "9-qe-m5", q: "x^2-6x+8=0", a: "2", difficulty: 2 },
+            ],
+
             hard: [
-              { id: "9-h1", q: "2x^2 - 7x + 3 = 0", a: "3", difficulty: 3 },
+              { id: "9-qe-h1", q: "2x^2-7x+3=0", a: "3", difficulty: 3 },
+              { id: "9-qe-h2", q: "x^2-9x+20=0", a: "4", difficulty: 3 },
+              { id: "9-qe-h3", q: "x^2-4x+3=0", a: "1", difficulty: 3 },
+              { id: "9-qe-h4", q: "x^2-10x+25=0", a: "5", difficulty: 3 },
+              { id: "9-qe-h5", q: "x^2-3x-10=0", a: "5", difficulty: 3 },
+            ],
+          },
+
+          quadratic_function: {
+            title: "Квадрат функция",
+
+            easy: [
+              { id: "9-qf-e1", q: "y=x^2, x=3", a: "9", difficulty: 1 },
+              { id: "9-qf-e2", q: "y=x^2, x=4", a: "16", difficulty: 1 },
+              { id: "9-qf-e3", q: "y=x^2, x=5", a: "25", difficulty: 1 },
+              { id: "9-qf-e4", q: "y=x^2, x=6", a: "36", difficulty: 1 },
+              { id: "9-qf-e5", q: "y=x^2, x=7", a: "49", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "9-qf-m1", q: "y=x^2-4, x=3", a: "5", difficulty: 2 },
+              { id: "9-qf-m2", q: "y=x^2+1, x=4", a: "17", difficulty: 2 },
+              { id: "9-qf-m3", q: "y=x^2-9, x=5", a: "16", difficulty: 2 },
+              { id: "9-qf-m4", q: "y=x^2-16, x=6", a: "20", difficulty: 2 },
+              { id: "9-qf-m5", q: "y=x^2+4, x=2", a: "8", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "9-qf-h1", q: "y=2x^2, x=3", a: "18", difficulty: 3 },
+              { id: "9-qf-h2", q: "y=3x^2-1, x=4", a: "47", difficulty: 3 },
+              { id: "9-qf-h3", q: "y=2x^2+3, x=5", a: "53", difficulty: 3 },
+              { id: "9-qf-h4", q: "y=4x^2-2, x=3", a: "34", difficulty: 3 },
+              { id: "9-qf-h5", q: "y=5x^2+1, x=2", a: "21", difficulty: 3 },
+            ],
+          },
+
+          arithmetic_progression: {
+            title: "Арифметикалық прогрессия",
+
+            easy: [
+              { id: "9-ap-e1", q: "2,4,6,... a4=?", a: "8", difficulty: 1 },
+              { id: "9-ap-e2", q: "5,8,11,... a4=?", a: "14", difficulty: 1 },
+              { id: "9-ap-e3", q: "1,3,5,... a5=?", a: "9", difficulty: 1 },
+              { id: "9-ap-e4", q: "10,12,14,... a4=?", a: "16", difficulty: 1 },
+              { id: "9-ap-e5", q: "7,9,11,... a4=?", a: "13", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "9-ap-m1", q: "a1=2,d=3,a5=?", a: "14", difficulty: 2 },
+              { id: "9-ap-m2", q: "a1=5,d=2,a6=?", a: "15", difficulty: 2 },
+              { id: "9-ap-m3", q: "a1=1,d=4,a4=?", a: "13", difficulty: 2 },
+              { id: "9-ap-m4", q: "a1=3,d=5,a3=?", a: "13", difficulty: 2 },
+              { id: "9-ap-m5", q: "a1=10,d=10,a3=?", a: "30", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "9-ap-h1", q: "a1=2,d=3,a10=?", a: "29", difficulty: 3 },
+              { id: "9-ap-h2", q: "a1=5,d=4,a8=?", a: "33", difficulty: 3 },
+              { id: "9-ap-h3", q: "a1=1,d=6,a7=?", a: "37", difficulty: 3 },
+              { id: "9-ap-h4", q: "a1=3,d=2,a12=?", a: "25", difficulty: 3 },
+              { id: "9-ap-h5", q: "a1=7,d=5,a9=?", a: "47", difficulty: 3 },
+            ],
+          },
+          geometric_progression: {
+            title: "Геометриялық прогрессия",
+
+            easy: [
+              { id: "9-gp-e1", q: "2,4,8,... a4=?", a: "16", difficulty: 1 },
+              { id: "9-gp-e2", q: "3,6,12,... a4=?", a: "24", difficulty: 1 },
+              { id: "9-gp-e3", q: "5,10,20,... a4=?", a: "40", difficulty: 1 },
+              { id: "9-gp-e4", q: "1,2,4,... a5=?", a: "16", difficulty: 1 },
+              { id: "9-gp-e5", q: "4,8,16,... a4=?", a: "32", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "9-gp-m1", q: "a1=2,q=3,a4=?", a: "54", difficulty: 2 },
+              { id: "9-gp-m2", q: "a1=5,q=2,a5=?", a: "80", difficulty: 2 },
+              { id: "9-gp-m3", q: "a1=3,q=4,a3=?", a: "48", difficulty: 2 },
+              { id: "9-gp-m4", q: "a1=2,q=5,a3=?", a: "50", difficulty: 2 },
+              { id: "9-gp-m5", q: "a1=1,q=10,a3=?", a: "100", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "9-gp-h1", q: "a1=2,q=2,a6=?", a: "64", difficulty: 3 },
+              { id: "9-gp-h2", q: "a1=3,q=3,a5=?", a: "243", difficulty: 3 },
+              { id: "9-gp-h3", q: "a1=5,q=2,a7=?", a: "320", difficulty: 3 },
+              { id: "9-gp-h4", q: "a1=4,q=3,a4=?", a: "108", difficulty: 3 },
+              { id: "9-gp-h5", q: "a1=2,q=4,a4=?", a: "128", difficulty: 3 },
+            ],
+          },
+          inequalities: {
+            title: "Теңсіздіктер",
+
+            easy: [
+              { id: "9-in-e1", q: "x+3>5", a: "2", difficulty: 1 },
+              { id: "9-in-e2", q: "x-2>3", a: "5", difficulty: 1 },
+              { id: "9-in-e3", q: "x+4<10", a: "6", difficulty: 1 },
+              { id: "9-in-e4", q: "2x>8", a: "4", difficulty: 1 },
+              { id: "9-in-e5", q: "3x>9", a: "3", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "9-in-m1", q: "2x+3>7", a: "2", difficulty: 2 },
+              { id: "9-in-m2", q: "3x-4>5", a: "3", difficulty: 2 },
+              { id: "9-in-m3", q: "4x+2<10", a: "2", difficulty: 2 },
+              { id: "9-in-m4", q: "5x-5>0", a: "1", difficulty: 2 },
+              { id: "9-in-m5", q: "6x+6>18", a: "2", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "9-in-h1", q: "2x-5>3", a: "4", difficulty: 3 },
+              { id: "9-in-h2", q: "3x+2<14", a: "4", difficulty: 3 },
+              { id: "9-in-h3", q: "5x-10>0", a: "2", difficulty: 3 },
+              { id: "9-in-h4", q: "4x+8<20", a: "3", difficulty: 3 },
+              { id: "9-in-h5", q: "7x-14>0", a: "2", difficulty: 3 },
+            ],
+          },
+          systems: {
+            title: "Жүйелер",
+
+            easy: [
+              { id: "9-sys-e1", q: "x=2,y=3 → x+y=?", a: "5", difficulty: 1 },
+              { id: "9-sys-e2", q: "x=4,y=5 → x+y=?", a: "9", difficulty: 1 },
+              { id: "9-sys-e3", q: "x=3,y=7 → x+y=?", a: "10", difficulty: 1 },
+              { id: "9-sys-e4", q: "x=6,y=1 → x+y=?", a: "7", difficulty: 1 },
+              { id: "9-sys-e5", q: "x=8,y=2 → x+y=?", a: "10", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "9-sys-m1", q: "x+y=5,x=2 → y=?", a: "3", difficulty: 2 },
+              { id: "9-sys-m2", q: "x+y=10,x=4 → y=?", a: "6", difficulty: 2 },
+              { id: "9-sys-m3", q: "x+y=7,x=3 → y=?", a: "4", difficulty: 2 },
+              { id: "9-sys-m4", q: "x+y=12,x=5 → y=?", a: "7", difficulty: 2 },
+              { id: "9-sys-m5", q: "x+y=9,x=6 → y=?", a: "3", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "9-sys-h1", q: "x+y=5,x-y=1 → x=?", a: "3", difficulty: 3 },
+              {
+                id: "9-sys-h2",
+                q: "x+y=10,x-y=2 → x=?",
+                a: "6",
+                difficulty: 3,
+              },
+              { id: "9-sys-h3", q: "x+y=8,x-y=4 → x=?", a: "6", difficulty: 3 },
+              {
+                id: "9-sys-h4",
+                q: "x+y=12,x-y=6 → x=?",
+                a: "9",
+                difficulty: 3,
+              },
+              {
+                id: "9-sys-h5",
+                q: "x+y=14,x-y=2 → x=?",
+                a: "8",
+                difficulty: 3,
+              },
             ],
           },
         },
@@ -390,34 +920,631 @@
         10: {
           derivatives: {
             title: "Туынды",
+
             easy: [
-              { id: "10-e1", q: "\\frac{d}{dx}(x^2)", a: "2x", difficulty: 1 },
-            ],
-            medium: [
-              { id: "10-m1", q: "\\frac{d}{dx}(3x^2)", a: "6x", difficulty: 2 },
-            ],
-            hard: [
               {
-                id: "10-h1",
+                id: "10-der-e1",
+                q: "\\frac{d}{dx}(x^2)",
+                a: "2x",
+                difficulty: 1,
+              },
+              {
+                id: "10-der-e2",
                 q: "\\frac{d}{dx}(x^3)",
                 a: "3x^2",
+                difficulty: 1,
+              },
+              {
+                id: "10-der-e3",
+                q: "\\frac{d}{dx}(5x)",
+                a: "5",
+                difficulty: 1,
+              },
+              { id: "10-der-e4", q: "\\frac{d}{dx}(7)", a: "0", difficulty: 1 },
+              {
+                id: "10-der-e5",
+                q: "\\frac{d}{dx}(4x^2)",
+                a: "8x",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              {
+                id: "10-der-m1",
+                q: "\\frac{d}{dx}(3x^3)",
+                a: "9x^2",
+                difficulty: 2,
+              },
+              {
+                id: "10-der-m2",
+                q: "\\frac{d}{dx}(2x^4)",
+                a: "8x^3",
+                difficulty: 2,
+              },
+              {
+                id: "10-der-m3",
+                q: "\\frac{d}{dx}(5x^2+3x)",
+                a: "10x+3",
+                difficulty: 2,
+              },
+              {
+                id: "10-der-m4",
+                q: "\\frac{d}{dx}(x^5)",
+                a: "5x^4",
+                difficulty: 2,
+              },
+              {
+                id: "10-der-m5",
+                q: "\\frac{d}{dx}(6x^3-2x)",
+                a: "18x^2-2",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "10-der-h1",
+                q: "\\frac{d}{dx}(x^4+3x^2)",
+                a: "4x^3+6x",
                 difficulty: 3,
               },
+              {
+                id: "10-der-h2",
+                q: "\\frac{d}{dx}(2x^5-4x^3)",
+                a: "10x^4-12x^2",
+                difficulty: 3,
+              },
+              {
+                id: "10-der-h3",
+                q: "\\frac{d}{dx}(7x^3+5)",
+                a: "21x^2",
+                difficulty: 3,
+              },
+              {
+                id: "10-der-h4",
+                q: "\\frac{d}{dx}(3x^4-6x^2+2)",
+                a: "12x^3-12x",
+                difficulty: 3,
+              },
+              {
+                id: "10-der-h5",
+                q: "\\frac{d}{dx}(5x^6)",
+                a: "30x^5",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          logarithms: {
+            title: "Логарифмдер",
+
+            easy: [
+              { id: "10-log-e1", q: "\\log_{10} 100", a: "2", difficulty: 1 },
+              { id: "10-log-e2", q: "\\log_{2} 8", a: "3", difficulty: 1 },
+              { id: "10-log-e3", q: "\\log_{5} 25", a: "2", difficulty: 1 },
+              { id: "10-log-e4", q: "\\log_{3} 9", a: "2", difficulty: 1 },
+              { id: "10-log-e5", q: "\\log_{4} 16", a: "2", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "10-log-m1", q: "\\log_{2} 32", a: "5", difficulty: 2 },
+              { id: "10-log-m2", q: "\\log_{3} 27", a: "3", difficulty: 2 },
+              { id: "10-log-m3", q: "\\log_{10} 1000", a: "3", difficulty: 2 },
+              { id: "10-log-m4", q: "\\log_{5} 125", a: "3", difficulty: 2 },
+              { id: "10-log-m5", q: "\\log_{7} 49", a: "2", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "10-log-h1", q: "\\log_{2} 64 + 1", a: "7", difficulty: 3 },
+              { id: "10-log-h2", q: "\\log_{3} 81 - 1", a: "3", difficulty: 3 },
+              { id: "10-log-h3", q: "2\\log_{2} 8", a: "6", difficulty: 3 },
+              { id: "10-log-h4", q: "\\log_{4} 64", a: "3", difficulty: 3 },
+              { id: "10-log-h5", q: "\\log_{9} 81", a: "2", difficulty: 3 },
+            ],
+          },
+
+          trigonometry: {
+            title: "Тригонометрия",
+
+            easy: [
+              { id: "10-tr-e1", q: "\\sin 90^\\circ", a: "1", difficulty: 1 },
+              { id: "10-tr-e2", q: "\\cos 0^\\circ", a: "1", difficulty: 1 },
+              { id: "10-tr-e3", q: "\\tan 45^\\circ", a: "1", difficulty: 1 },
+              { id: "10-tr-e4", q: "\\sin 30^\\circ", a: "1/2", difficulty: 1 },
+              { id: "10-tr-e5", q: "\\cos 60^\\circ", a: "1/2", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "10-tr-m1", q: "2\\sin 30^\\circ", a: "1", difficulty: 2 },
+              {
+                id: "10-tr-m2",
+                q: "\\cos 45^\\circ",
+                a: "√2/2",
+                difficulty: 2,
+              },
+              { id: "10-tr-m3", q: "\\sin^2 90^\\circ", a: "1", difficulty: 2 },
+              { id: "10-tr-m4", q: "\\tan 60^\\circ", a: "√3", difficulty: 2 },
+              { id: "10-tr-m5", q: "\\cos^2 0^\\circ", a: "1", difficulty: 2 },
+            ],
+
+            hard: [
+              {
+                id: "10-tr-h1",
+                q: "\\sin^2 30^\\circ",
+                a: "1/4",
+                difficulty: 3,
+              },
+              {
+                id: "10-tr-h2",
+                q: "1-\\cos^2 60^\\circ",
+                a: "3/4",
+                difficulty: 3,
+              },
+              {
+                id: "10-tr-h3",
+                q: "\\sin 45^\\circ \\cdot \\cos 45^\\circ",
+                a: "1/2",
+                difficulty: 3,
+              },
+              {
+                id: "10-tr-h4",
+                q: "\\tan 45^\\circ + 1",
+                a: "2",
+                difficulty: 3,
+              },
+              {
+                id: "10-tr-h5",
+                q: "\\sin 60^\\circ",
+                a: "√3/2",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          sequences: {
+            title: "Тізбектер",
+
+            easy: [
+              { id: "10-seq-e1", q: "2,4,6,... a4=?", a: "8", difficulty: 1 },
+              { id: "10-seq-e2", q: "1,3,5,... a5=?", a: "9", difficulty: 1 },
+              { id: "10-seq-e3", q: "3,6,9,... a4=?", a: "12", difficulty: 1 },
+              {
+                id: "10-seq-e4",
+                q: "5,10,15,... a4=?",
+                a: "20",
+                difficulty: 1,
+              },
+              {
+                id: "10-seq-e5",
+                q: "7,14,21,... a4=?",
+                a: "28",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              { id: "10-seq-m1", q: "a1=2,d=3,a5=?", a: "14", difficulty: 2 },
+              { id: "10-seq-m2", q: "a1=1,d=4,a4=?", a: "13", difficulty: 2 },
+              { id: "10-seq-m3", q: "a1=3,d=5,a3=?", a: "13", difficulty: 2 },
+              { id: "10-seq-m4", q: "a1=5,d=2,a6=?", a: "15", difficulty: 2 },
+              { id: "10-seq-m5", q: "a1=10,d=10,a3=?", a: "30", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "10-seq-h1", q: "a1=2,d=3,a10=?", a: "29", difficulty: 3 },
+              { id: "10-seq-h2", q: "a1=5,d=4,a8=?", a: "33", difficulty: 3 },
+              { id: "10-seq-h3", q: "a1=1,d=6,a7=?", a: "37", difficulty: 3 },
+              { id: "10-seq-h4", q: "a1=3,d=2,a12=?", a: "25", difficulty: 3 },
+              { id: "10-seq-h5", q: "a1=7,d=5,a9=?", a: "47", difficulty: 3 },
+            ],
+          },
+
+          inequalities10: {
+            title: "Күрделі теңсіздіктер",
+
+            easy: [
+              { id: "10-in-e1", q: "x+5>10", a: "5", difficulty: 1 },
+              { id: "10-in-e2", q: "2x>8", a: "4", difficulty: 1 },
+              { id: "10-in-e3", q: "x-3<5", a: "8", difficulty: 1 },
+              { id: "10-in-e4", q: "3x>9", a: "3", difficulty: 1 },
+              { id: "10-in-e5", q: "x/2>4", a: "8", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "10-in-m1", q: "2x+3>7", a: "2", difficulty: 2 },
+              { id: "10-in-m2", q: "3x-4>5", a: "3", difficulty: 2 },
+              { id: "10-in-m3", q: "4x+2<10", a: "2", difficulty: 2 },
+              { id: "10-in-m4", q: "5x-5>0", a: "1", difficulty: 2 },
+              { id: "10-in-m5", q: "6x+6>18", a: "2", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "10-in-h1", q: "2x-5>3", a: "4", difficulty: 3 },
+              { id: "10-in-h2", q: "3x+2<14", a: "4", difficulty: 3 },
+              { id: "10-in-h3", q: "5x-10>0", a: "2", difficulty: 3 },
+              { id: "10-in-h4", q: "4x+8<20", a: "3", difficulty: 3 },
+              { id: "10-in-h5", q: "7x-14>0", a: "2", difficulty: 3 },
+            ],
+          },
+
+          probability10: {
+            title: "Ықтималдық (Кеңейтілген)",
+
+            easy: [
+              { id: "10-pr-e1", q: "P(герб) тиын", a: "1/2", difficulty: 1 },
+              { id: "10-pr-e2", q: "P(1) кубик", a: "1/6", difficulty: 1 },
+              { id: "10-pr-e3", q: "P(жұп) кубик", a: "1/2", difficulty: 1 },
+              {
+                id: "10-pr-e4",
+                q: "10 билет 1 ұтыс",
+                a: "1/10",
+                difficulty: 1,
+              },
+              {
+                id: "10-pr-e5",
+                q: "5 қыз 5 ұл P(қыз)",
+                a: "1/2",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              {
+                id: "10-pr-m1",
+                q: "2 тиын P(2 герб)",
+                a: "1/4",
+                difficulty: 2,
+              },
+              {
+                id: "10-pr-m2",
+                q: "2 кубик P(қосынды 7)",
+                a: "1/6",
+                difficulty: 2,
+              },
+              { id: "10-pr-m3", q: "P(1 немесе 2)", a: "1/3", difficulty: 2 },
+              { id: "10-pr-m4", q: "8 билет 2 ұтыс", a: "1/4", difficulty: 2 },
+              {
+                id: "10-pr-m5",
+                q: "3 тиын P(3 герб)",
+                a: "1/8",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "10-pr-h1",
+                q: "P(кемінде 1 герб)",
+                a: "3/4",
+                difficulty: 3,
+              },
+              { id: "10-pr-h2", q: "P(қосынды>8)", a: "5/36", difficulty: 3 },
+              { id: "10-pr-h3", q: "P(2 қыз 1 ұл)", a: "1/4", difficulty: 3 },
+              { id: "10-pr-h4", q: "P(3 тақ)", a: "1/8", difficulty: 3 },
+              { id: "10-pr-h5", q: "P(екі 6)", a: "1/36", difficulty: 3 },
             ],
           },
         },
 
         11: {
-          integrals: {
-            title: "Интеграл",
+          applications_derivative: {
+            title: "Туындының қолданылуы (Экстремум)",
+
             easy: [
-              { id: "11-e1", q: "\\int x dx", a: "x^2/2 + C", difficulty: 1 },
+              {
+                id: "11-ad-e1",
+                q: "f(x)=x^2, f'(x)=?",
+                a: "2x",
+                difficulty: 1,
+              },
+              {
+                id: "11-ad-e2",
+                q: "f(x)=3x^2, f'(x)=?",
+                a: "6x",
+                difficulty: 1,
+              },
+              {
+                id: "11-ad-e3",
+                q: "f(x)=x^3, f'(x)=?",
+                a: "3x^2",
+                difficulty: 1,
+              },
+              { id: "11-ad-e4", q: "f(x)=5x, f'(x)=?", a: "5", difficulty: 1 },
+              { id: "11-ad-e5", q: "f(x)=7, f'(x)=?", a: "0", difficulty: 1 },
             ],
+
             medium: [
-              { id: "11-m1", q: "\\int 2x dx", a: "x^2 + C", difficulty: 2 },
+              {
+                id: "11-ad-m1",
+                q: "f(x)=x^2-4x, экстремум x=?",
+                a: "2",
+                difficulty: 2,
+              },
+              {
+                id: "11-ad-m2",
+                q: "f(x)=x^2-6x, экстремум x=?",
+                a: "3",
+                difficulty: 2,
+              },
+              {
+                id: "11-ad-m3",
+                q: "f(x)=x^2+2x, экстремум x=?",
+                a: "-1",
+                difficulty: 2,
+              },
+              {
+                id: "11-ad-m4",
+                q: "f(x)=x^3-3x, f'(x)=0 шешімі?",
+                a: "1,-1",
+                difficulty: 2,
+              },
+              {
+                id: "11-ad-m5",
+                q: "f(x)=2x^2-8x, экстремум x=?",
+                a: "2",
+                difficulty: 2,
+              },
             ],
+
             hard: [
-              { id: "11-h1", q: "\\int x^2 dx", a: "x^3/3 + C", difficulty: 3 },
+              {
+                id: "11-ad-h1",
+                q: "f(x)=x^3-6x^2+9x, критикалық нүктелер?",
+                a: "1,3",
+                difficulty: 3,
+              },
+              {
+                id: "11-ad-h2",
+                q: "f(x)=x^4-4x^2, f'(x)=0 шешімі?",
+                a: "0,1,-1",
+                difficulty: 3,
+              },
+              {
+                id: "11-ad-h3",
+                q: "f(x)=x^3-3x^2+2, экстремум x=?",
+                a: "0,2",
+                difficulty: 3,
+              },
+              {
+                id: "11-ad-h4",
+                q: "f(x)=x^2-2x+1 минимум x=?",
+                a: "1",
+                difficulty: 3,
+              },
+              {
+                id: "11-ad-h5",
+                q: "f(x)=3x^2-12x+7 экстремум x=?",
+                a: "2",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          logarithmic_equations: {
+            title: "Логарифмдік теңдеулер",
+
+            easy: [
+              { id: "11-log-e1", q: "\\log_2 8", a: "3", difficulty: 1 },
+              { id: "11-log-e2", q: "\\log_10 100", a: "2", difficulty: 1 },
+              { id: "11-log-e3", q: "\\log_3 9", a: "2", difficulty: 1 },
+              { id: "11-log-e4", q: "\\log_5 25", a: "2", difficulty: 1 },
+              { id: "11-log-e5", q: "\\log_4 16", a: "2", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "11-log-m1", q: "\\log_2 x = 3", a: "8", difficulty: 2 },
+              { id: "11-log-m2", q: "\\log_3 x = 2", a: "9", difficulty: 2 },
+              { id: "11-log-m3", q: "\\log_5 x = 1", a: "5", difficulty: 2 },
+              { id: "11-log-m4", q: "\\log_2(x-1)=2", a: "5", difficulty: 2 },
+              { id: "11-log-m5", q: "\\log_4 x=3", a: "64", difficulty: 2 },
+            ],
+
+            hard: [
+              {
+                id: "11-log-h1",
+                q: "\\log_2(x^2)=4",
+                a: "4,-4",
+                difficulty: 3,
+              },
+              { id: "11-log-h2", q: "\\log_3(x+1)=2", a: "8", difficulty: 3 },
+              { id: "11-log-h3", q: "\\log_5(2x)=1", a: "2.5", difficulty: 3 },
+              { id: "11-log-h4", q: "\\log_2(x-3)=3", a: "11", difficulty: 3 },
+              {
+                id: "11-log-h5",
+                q: "\\log_3(x^2-1)=2",
+                a: "4,-4",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          exponential_equations: {
+            title: "Көрсеткіштік теңдеулер",
+
+            easy: [
+              { id: "11-exp-e1", q: "2^x=8", a: "3", difficulty: 1 },
+              { id: "11-exp-e2", q: "3^x=9", a: "2", difficulty: 1 },
+              { id: "11-exp-e3", q: "5^x=25", a: "2", difficulty: 1 },
+              { id: "11-exp-e4", q: "4^x=16", a: "2", difficulty: 1 },
+              { id: "11-exp-e5", q: "10^x=100", a: "2", difficulty: 1 },
+            ],
+
+            medium: [
+              { id: "11-exp-m1", q: "2^(x+1)=16", a: "3", difficulty: 2 },
+              { id: "11-exp-m2", q: "3^(2x)=9", a: "1", difficulty: 2 },
+              { id: "11-exp-m3", q: "5^(x-1)=5", a: "2", difficulty: 2 },
+              { id: "11-exp-m4", q: "4^(x+2)=64", a: "1", difficulty: 2 },
+              { id: "11-exp-m5", q: "9^x=3", a: "1/2", difficulty: 2 },
+            ],
+
+            hard: [
+              { id: "11-exp-h1", q: "2^x=3", a: "log2(3)", difficulty: 3 },
+              { id: "11-exp-h2", q: "5^x=7", a: "log5(7)", difficulty: 3 },
+              {
+                id: "11-exp-h3",
+                q: "3^(x+1)=5",
+                a: "log3(5)-1",
+                difficulty: 3,
+              },
+              { id: "11-exp-h4", q: "7^(2x)=3", a: "log7(3)/2", difficulty: 3 },
+              { id: "11-exp-h5", q: "4^x=5", a: "log4(5)", difficulty: 3 },
+            ],
+          },
+
+          integral_applications: {
+            title: "Интегралды қолдану",
+
+            easy: [
+              { id: "11-int-e1", q: "\\int_0^1 x dx", a: "1/2", difficulty: 1 },
+              { id: "11-int-e2", q: "\\int_0^2 2x dx", a: "4", difficulty: 1 },
+              { id: "11-int-e3", q: "\\int_0^1 3 dx", a: "3", difficulty: 1 },
+              { id: "11-int-e4", q: "\\int_1^2 x dx", a: "3/2", difficulty: 1 },
+              {
+                id: "11-int-e5",
+                q: "\\int_0^1 x^2 dx",
+                a: "1/3",
+                difficulty: 1,
+              },
+            ],
+
+            medium: [
+              {
+                id: "11-int-m1",
+                q: "\\int_0^1 (x+1) dx",
+                a: "3/2",
+                difficulty: 2,
+              },
+              {
+                id: "11-int-m2",
+                q: "\\int_0^2 x^2 dx",
+                a: "8/3",
+                difficulty: 2,
+              },
+              { id: "11-int-m3", q: "\\int_1^3 x dx", a: "4", difficulty: 2 },
+              {
+                id: "11-int-m4",
+                q: "\\int_0^1 (2x+1) dx",
+                a: "2",
+                difficulty: 2,
+              },
+              {
+                id: "11-int-m5",
+                q: "\\int_0^1 4x^3 dx",
+                a: "1",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "11-int-h1",
+                q: "\\int_0^1 (x^3+x) dx",
+                a: "3/4",
+                difficulty: 3,
+              },
+              {
+                id: "11-int-h2",
+                q: "\\int_0^\\pi \\sin x dx",
+                a: "2",
+                difficulty: 3,
+              },
+              {
+                id: "11-int-h3",
+                q: "\\int_0^1 e^x dx",
+                a: "e-1",
+                difficulty: 3,
+              },
+              {
+                id: "11-int-h4",
+                q: "\\int_0^1 1/(1+x) dx",
+                a: "ln2",
+                difficulty: 3,
+              },
+              {
+                id: "11-int-h5",
+                q: "\\int_0^1 (3x^2+2x) dx",
+                a: "2",
+                difficulty: 3,
+              },
+            ],
+          },
+
+          parameter_equations: {
+            title: "Параметрлі теңдеулер",
+
+            easy: [
+              {
+                id: "11-par-e1",
+                q: "x^2 - a = 0, a=4",
+                a: "2,-2",
+                difficulty: 1,
+              },
+              { id: "11-par-e2", q: "x^2 - a^2 = 0", a: "a,-a", difficulty: 1 },
+              { id: "11-par-e3", q: "ax=2, a=2", a: "1", difficulty: 1 },
+              { id: "11-par-e4", q: "x+a=0", a: "-a", difficulty: 1 },
+              { id: "11-par-e5", q: "2x+a=0", a: "-a/2", difficulty: 1 },
+            ],
+
+            medium: [
+              {
+                id: "11-par-m1",
+                q: "x^2+ax+1=0 дискриминант?",
+                a: "a^2-4",
+                difficulty: 2,
+              },
+              {
+                id: "11-par-m2",
+                q: "x^2+2ax+a^2=0 түбір?",
+                a: "-a",
+                difficulty: 2,
+              },
+              {
+                id: "11-par-m3",
+                q: "ax^2-1=0",
+                a: "1/√a,-1/√a",
+                difficulty: 2,
+              },
+              { id: "11-par-m4", q: "x^2-a^2=0", a: "a,-a", difficulty: 2 },
+              {
+                id: "11-par-m5",
+                q: "x^2+2ax+4=0 D=?",
+                a: "4a^2-16",
+                difficulty: 2,
+              },
+            ],
+
+            hard: [
+              {
+                id: "11-par-h1",
+                q: "x^2+ax+1=0 бір түбір үшін a=?",
+                a: "2,-2",
+                difficulty: 3,
+              },
+              {
+                id: "11-par-h2",
+                q: "x^2+ax+a=0 екі түбір үшін шарт?",
+                a: "a^2-4a>0",
+                difficulty: 3,
+              },
+              {
+                id: "11-par-h3",
+                q: "x^2+ax+4=0 нақты түбір жоқ шарты?",
+                a: "a^2-16<0",
+                difficulty: 3,
+              },
+              {
+                id: "11-par-h4",
+                q: "x^2+ax+1=0 түбірлері қарама-қарсы",
+                a: "a=0",
+                difficulty: 3,
+              },
+              {
+                id: "11-par-h5",
+                q: "x^2+ax+1=0 түбірлері тең",
+                a: "a=2,-2",
+                difficulty: 3,
+              },
             ],
           },
         },
@@ -426,153 +1553,1188 @@
       const THEORY_BANK = {
         7: [
           {
-            id: "7-percent",
-            title: "Пайыз (Проценты)",
-            summary:
-              "Процент, нахождение процента от числа, число по проценту.",
+            id: "7-linear",
+            title: "Сызықтық теңдеулер",
+            summary: "ax + b = 0 түріндегі теңдеулерді шешу алгоритмі",
+
             sections: [
               {
-                h: "Негізгі анықтама",
-                p: [
-                  "Процент — бұл жүзден бір бөлік: 1% = 1/100.",
-                  "p% = p/100",
+                type: "definition",
+                title: "Анықтама",
+                content: [
+                  "Сызықтық теңдеу — айнымалысы бірінші дәрежеде болатын теңдеу.",
+                  "Жалпы түрі:",
+                  "ax + b = 0",
+                  "Мұндағы:",
+                  "a — айнымалының коэффициенті,",
+                  "b — бос мүше,",
+                  "a ≠ 0.",
                 ],
               },
+
               {
-                h: "Формулалар",
-                p: [
-                  "p% of a = a · p/100",
-                  "a is p% of b  ⇔  a = b · p/100",
-                  "Find b if a is p%:  b = a · 100/p",
+                type: "interactive_formula",
+                title: "Негізгі формула",
+                formula: "ax + b = 0 \\Rightarrow x = -\\frac{b}{a}",
+              },
+
+              {
+                type: "example_steps",
+                title: "Мысал (қадамдап түсіндіру)",
+                task: "3x - 6 = 0",
+                steps: [
+                  "Бос мүшені қарсы жаққа өткіземіз: $3x = 6$",
+                  "Коэффициентке бөлеміз: $x = \\frac{6}{3}$",
+                  "Қысқартамыз: $x = 2$",
+                  "Тексеру: $3\\cdot 2 - 6 = 0$ ",
                 ],
+                answer: "$x = 2$",
               },
             ],
-            example: {
-              q: "150 санының 20%-ын табыңыз",
-              steps: ["20% = 20/100", "150 · 20/100 = 30"],
-              ans: "30",
-            },
+
+            examples: [
+              {
+                question: "3x - 6 = 0",
+                steps: ["3x = 6", "x = \\frac{6}{3}", "x = 2"],
+                answer: "x = 2",
+              },
+
+              {
+                question: "5x + 10 = 0",
+                steps: ["5x = -10", "x = \\frac{-10}{5}", "x = -2"],
+                answer: "x = -2",
+              },
+
+              {
+                question: "2(x - 3) = 0",
+                steps: ["2x - 6 = 0", "2x = 6", "x = 3"],
+                answer: "x = 3",
+              },
+            ],
           },
+
           {
-            id: "7-fractions-add",
-            title: "Бөлшектерді қосу (Сложение дробей)",
-            summary: "Ортақ бөлім, алымдарды қосу, қысқарту.",
+            id: "7-fractions",
+            title: "Бөлшектер",
+            summary: "Бөлшектерді қосу, азайту, көбейту, бөлу",
+
             sections: [
               {
-                h: "Алгоритм",
-                p: [
-                  "Ортақ бөлім табу (ЕКОЕ).",
-                  "Әр бөлшекті ортақ бөлімге келтіру.",
-                  "Алымдарды қосу, қысқарту.",
+                type: "definition",
+                title: "Анықтама",
+                content: [
+                  "Бөлшек — алымы мен бөлімі бар сан.",
+                  "Жалпы түрі: $\\frac{a}{b}$, $b \\ne 0$",
                 ],
               },
+
+              {
+                type: "interactive_formula",
+                title: "Қосу",
+                formula: "\\frac{a}{b} + \\frac{c}{b} = \\frac{a+c}{b}",
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Көбейту",
+                formula: "\\frac{a}{b} \\times \\frac{c}{d} = \\frac{ac}{bd}",
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Бөлу",
+                formula:
+                  "\\frac{a}{b} : \\frac{c}{d} = \\frac{a}{b} \\times \\frac{d}{c}",
+              },
+
+              {
+                type: "example_steps",
+                title: "Мысал (қадамдап түсіндіру)",
+                task: "\\frac{1}{2} + \\frac{1}{3}",
+                steps: [
+                  "Ортақ бөлім табамыз: $6$",
+                  "$\\frac{1}{2} = \\frac{3}{6}$",
+                  "$\\frac{1}{3} = \\frac{2}{6}$",
+                  "$\\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}$",
+                ],
+                answer: "$\\frac{5}{6}$",
+              },
             ],
-            example: {
-              q: "1/2 + 1/3",
-              steps: ["Ортақ бөлім: 6", "3/6 + 2/6 = 5/6"],
-              ans: "5/6",
-            },
+
+            examples: [
+              {
+                question: "\\frac{1}{2} + \\frac{1}{3}",
+                steps: [
+                  "Ортақ бөлім: 6",
+                  "\\frac{1}{2} = \\frac{3}{6}",
+                  "\\frac{1}{3} = \\frac{2}{6}",
+                  "\\frac{3}{6} + \\frac{2}{6} = \\frac{5}{6}",
+                ],
+                answer: "\\frac{5}{6}",
+              },
+            ],
+          },
+
+          {
+            id: "7-percent",
+            title: "Пайыз",
+            summary: "Процентті табу және қолдану",
+
+            sections: [
+              {
+                type: "definition",
+                title: "Анықтама",
+                content: [
+                  String.raw`1% = $\frac{1}{100}$`,
+                  "Процент — жүзден бір бөлік.",
+                ],
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Негізгі формула",
+                formula: "a \\times \\frac{p}{100}",
+              },
+
+              {
+                type: "remember",
+                title: "Есте сақта!",
+                content: [
+                  "Процент әрқашан 100-ге бөлінеді.",
+                  "Алдымен процентті бөлшекке айналдыр.",
+                ],
+              },
+              {
+                type: "example_steps",
+                title: "Мысал (қадамдап түсіндіру)",
+                task: "150 санының 20%-ын тап",
+                steps: [
+                  String.raw`20% = $\frac{20}{100}$`,
+                  String.raw`Формула: $150 \times \frac{20}{100}$`,
+                  String.raw`Есептейміз: $150 \times 0.2 = 30$`,
+                  String.raw`Тексеру: $30$ — $150$-нің $20\%$-ы`,
+                ],
+                answer: "30",
+              },
+            ],
+          },
+
+          {
+            id: "7-rational",
+            title: "Рационал сандар",
+            summary: "Оң және теріс сандармен амалдар",
+
+            sections: [
+              {
+                type: "definition",
+                title: "Анықтама",
+                content: [
+                  String.raw`Рационал сан — $\frac{a}{b}$ түрінде жазылатын сан, мұнда $a,b \in \mathbb{Z}$ және $b \ne 0$.`,
+                  String.raw`Рационал сандарға бүтін сандар да жатады, себебі $-3 = \frac{-3}{1}$, $0=\frac{0}{1}$.`,
+                  String.raw`Кез келген аяқталатын ондық бөлшек рационал: $0.75=\frac{75}{100}=\frac{3}{4}$.`,
+                  String.raw`Қайталанатын ондық бөлшек те рационал: $0.\overline{3}=\frac{1}{3}$.`,
+                ],
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Негізгі формула",
+                formula: String.raw`(-a)(-b)=ab`,
+              },
+
+              // ✅ "Есте сақта!" орнына — мысал
+              {
+                type: "example_steps",
+                title: "Мысал (қадамдап түсіндіру)",
+                task: "0.75 санын бөлшек түрінде жаз",
+
+                steps: [
+                  String.raw`$0.75 = \frac{75}{100}$`,
+                  String.raw`Қысқартамыз: $\frac{75}{100} = \frac{3}{4}$ (25-ке бөлеміз)`,
+                  String.raw`Демек, $0.75$ — рационал сан ✅`,
+                ],
+                answer: String.raw`$\frac{3}{4}$`,
+              },
+            ],
+
+            examples: [
+              {
+                question: String.raw`-1.2 санын бөлшек түрінде жаз`,
+                steps: [
+                  String.raw`-1.2 = -\frac{12}{10}`,
+                  String.raw`Қысқартамыз: $-\frac{12}{10} = -\frac{6}{5}$`,
+                ],
+                answer: String.raw`-\frac{6}{5}`,
+              },
+            ],
+          },
+
+          {
+            id: "7-expressions",
+            title: "Өрнектер",
+            summary: "Ұқсас мүшелер және жақша ашу",
+
+            sections: [
+              {
+                type: "definition",
+                title: "Анықтама",
+                content: [
+                  "Өрнек — сандар, айнымалылар және амал белгілерінен (+, −, ×, ÷) құралған математикалық жазу.",
+                  "Өрнекті ықшамдау — ұқсас мүшелерді біріктіру және жақшаны ашу арқылы қысқарту.",
+                ],
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Ұқсас мүшелер",
+                formula: "3x + 2x = 5x",
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Жақша ашу",
+                formula: "a(b + c) = ab + ac",
+              },
+
+              {
+                type: "remember",
+                title: "Есте сақта!",
+                content: [
+                  "Тек ұқсас мүшелер қосылады.",
+                  "Жақша алдындағы сан барлық мүшеге көбейеді.",
+                ],
+              },
+              {
+                type: "example_steps",
+                title: "Мысал (қадамдап түсіндіру)",
+                task: "3x + 2x − x өрнегін ықшамда",
+                steps: [
+                  String.raw`Берілгені: $3x + 2x - x$`,
+                  String.raw`Ұқсас мүшелерді біріктіреміз: $(3 + 2 - 1)x$`,
+                  String.raw`Есептейміз: $4x$`,
+                  String.raw`Тексеру: $x=1$ болса, $3+2-1=4$ ✅`,
+                ],
+                answer: String.raw`$4x$`,
+              },
+            ],
+
+            examples: [
+              {
+                question: "2(x + 3)",
+                steps: ["2 \\times x", "2 \\times 3", "2x + 6"],
+                answer: "2x + 6",
+              },
+            ],
+          },
+
+          {
+            id: "7-powers",
+            title: "Дәреже",
+            summary: "aⁿ және оның қасиеттері",
+
+            sections: [
+              {
+                type: "definition",
+                title: "Анықтама",
+                content: [
+                  String.raw`Дәреже — $a^n$ түріндегі өрнек.`,
+                  String.raw`Мұнда $a$ — негіз (base), $n$ — дәреже көрсеткіші (натурал сан).`,
+                  String.raw`Мағынасы: $a^n$ — $a$ санын өзіне $n$ рет көбейту, яғни $a^n=\underbrace{a\cdot a\cdot \ldots \cdot a}_{n\ \text{рет}}$.`,
+                ],
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Қасиеттер",
+                formula: "a^m \\times a^n = a^{m+n}",
+              },
+
+              {
+                type: "interactive_formula",
+                title: "Қасиет 2",
+                formula: "\\frac{a^m}{a^n} = a^{m-n}",
+              },
+
+              {
+                type: "remember",
+                title: "Есте сақта!",
+                content: ["a^0 = 1", "(a^m)^n = a^{mn}"],
+              },
+
+              {
+                type: "example_steps",
+                title: "Мысал (қадамдап түсіндіру)",
+                task: "2^3 · 2^4 мәнін тап",
+                steps: [
+                  String.raw`Қасиет: $a^m \cdot a^n = a^{m+n}$`,
+                  String.raw`Қолданамыз: $2^3 \cdot 2^4 = 2^{3+4} = 2^7$`,
+                  String.raw`Есептейміз: $2^7 = 128$`,
+                  String.raw`Тексеру: $2^3=8$, $2^4=16$, $8\cdot 16=128$ ✅`,
+                ],
+                answer: String.raw`128`,
+              },
+            ],
           },
         ],
 
         8: [
           {
-            id: "8-linear",
-            title: "Сызықтық теңдеу (Линейное уравнение)",
-            summary: "ax + b = c түрі.",
-            sections: [
-              {
-                h: "Алгоритм",
-                p: ["b мүшесін екінші жаққа өткізу.", "a коэффициентіне бөлу."],
-              },
-              {
-                h: "Ескерту",
-                p: ["Теңдеудің екі жағына бірдей амал жасауға болады."],
-              },
-            ],
-            example: {
-              q: "2x - 5 = 9",
-              steps: ["2x = 14", "x = 7"],
-              ans: "7",
-            },
-          },
+  id: "8-square-root",
+  title: "Квадрат түбір",
+  summary: "√a және оның қасиеттері",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Квадрат түбір — $x^2 = a$ теңдігін қанағаттандыратын сан.`,
+        String.raw`Белгіленуі: $\sqrt{a}$`,
+        String.raw`$\sqrt{a} \ge 0$ (негізгі түбір оң сан).`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`\sqrt{a^2} = |a|`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`\sqrt{ab} = \sqrt{a}\sqrt{b}`,
+        String.raw`\sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}`,
+        String.raw`\sqrt{25} = 5, \quad -5 емес!`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "√49 + √16 мәнін тап",
+      steps: [
+        String.raw`\sqrt{49} = 7`,
+        String.raw`\sqrt{16} = 4`,
+        String.raw`Қосамыз: $7 + 4 = 11$`,
+      ],
+      answer: String.raw`11`,
+    },
+  ],
+},
           {
-            id: "8-sq-diff",
-            title: "Квадрат айырмасы",
-            summary: "x^2 - a^2 = (x-a)(x+a)",
-            sections: [
-              {
-                h: "Формула",
-                p: ["x^2 - a^2 = (x-a)(x+a)"],
-              },
-              {
-                h: "Қолдану",
-                p: ["x^2 - 9 = x^2 - 3^2 = (x-3)(x+3)"],
-              },
-            ],
-            example: {
-              q: "x^2 - 9",
-              steps: ["9 = 3^2", "(x-3)(x+3)"],
-              ans: "(x-3)(x+3)",
-            },
-          },
+  id: "8-quadratic",
+  title: "Квадрат теңдеулер",
+  summary: "ax² + bx + c = 0",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Квадрат теңдеу — $ax^2 + bx + c = 0$ түріндегі теңдеу.`,
+        String.raw`Мұнда $a \ne 0$.`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`D = b^2 - 4ac`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`D > 0 → 2 түбір`,
+        String.raw`D = 0 → 1 түбір`,
+        String.raw`D < 0 → түбір жоқ`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "x² − 5x + 6 = 0 теңдеуін шеш",
+      steps: [
+        String.raw`a=1, b=-5, c=6`,
+        String.raw`D = (-5)^2 - 4·1·6 = 25 - 24 = 1`,
+        String.raw`x = \frac{5 \pm \sqrt{1}}{2}`,
+        String.raw`x₁ = 3, x₂ = 2`,
+      ],
+      answer: String.raw`x = 2; 3`,
+    },
+  ],
+},
+{
+  id: "8-linear-function",
+  title: "Сызықтық функция",
+  summary: "y = kx + b",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Сызықтық функция: $y = kx + b$`,
+        String.raw`k — еңкіштік коэффициенті.`,
+        String.raw`b — ордината осімен қиылысу нүктесі.`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`y = kx + b`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "y = 2x + 1 функциясында x=3 болғанда y мәнін тап",
+      steps: [
+        String.raw`x=3 қоямыз`,
+        String.raw`y = 2·3 + 1`,
+        String.raw`y = 7`,
+      ],
+      answer: String.raw`7`,
+    },
+  ],
+},
+{
+  id: "8-quadratic-expression",
+  title: "Квадрат үшмүше",
+  summary: "ax² + bx + c",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Квадрат үшмүше — $ax^2 + bx + c$`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`D = b^2 - 4ac`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "x² − 4x + 4 өрнегін көбейткіштерге жікте",
+      steps: [
+        String.raw`D = (-4)^2 - 4·1·4 = 16 - 16 = 0`,
+        String.raw`(x - 2)^2`,
+      ],
+      answer: String.raw`(x - 2)^2`,
+    },
+  ],
+},
+{
+  id: "8-statistics",
+  title: "Статистика",
+  summary: "Орташа мән, мода, медиана",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Орташа мән — барлық мәндердің қосындысын санына бөлу.",
+        "Мода — ең жиі кездесетін сан.",
+        "Медиана — ортасындағы сан.",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "2, 3, 3, 5, 7 сандарының орташа мәнін тап",
+      steps: [
+        "Қосынды: 2+3+3+5+7 = 20",
+        "Саны: 5",
+        "Орташа мән: 20/5 = 4",
+      ],
+      answer: "4",
+    },
+  ],
+},
+{
+  id: "8-probability",
+  title: "Ықтималдық",
+  summary: "Ықтималдық формуласы",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Ықтималдық формуласы: P(A) = \frac{m}{n}`,
+        "m — қолайлы жағдай саны.",
+        "n — барлық мүмкін жағдай саны.",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "Кубик тастағанда 3 санының түсу ықтималдығын тап",
+      steps: [
+        "Қолайлы жағдай: 1",
+        "Барлық жағдай: 6",
+        String.raw`P = \frac{1}{6}`,
+      ],
+      answer: String.raw`\frac{1}{6}`,
+    },
+  ],
+},
         ],
 
         9: [
           {
-            id: "9-quadratic",
-            title: "Квадрат теңдеу (Виет теоремасы)",
-            summary: "x^2 + px + q = 0 → x1+x2=-p, x1·x2=q",
-            sections: [
-              {
-                h: "Виет",
-                p: ["x^2 + px + q = 0", "x1 + x2 = -p", "x1 · x2 = q"],
-              },
-            ],
-            example: {
-              q: "x^2 - 5x + 6 = 0",
-              steps: ["x1+x2 = 5, x1·x2 = 6", "Түбірлер: 2 және 3"],
-              ans: "2, 3",
-            },
-          },
+  id: "9-quadratic-equations",
+  title: "Квадрат теңдеулер",
+  summary: "ax² + bx + c = 0",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Квадрат теңдеу — $ax^2 + bx + c = 0$ түріндегі теңдеу.`,
+        String.raw`Мұнда $a \ne 0$.`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`D = b^2 - 4ac`,
+        String.raw`D > 0 → 2 түбір`,
+        String.raw`D = 0 → 1 түбір`,
+        String.raw`D < 0 → түбір жоқ`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "x² − 3x − 4 = 0 теңдеуін шеш",
+      steps: [
+        String.raw`a=1, b=-3, c=-4`,
+        String.raw`D = (-3)^2 - 4·1·(-4) = 9 + 16 = 25`,
+        String.raw`x = \frac{3 \pm 5}{2}`,
+        String.raw`x₁ = 4, x₂ = -1`,
+      ],
+      answer: String.raw`x = 4; -1`,
+    },
+  ],
+},
+
+{
+  id: "9-quadratic-function",
+  title: "Квадрат функция",
+  summary: "y = ax² + bx + c",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Квадрат функция: $y = ax^2 + bx + c$`,
+        String.raw`Графигі — парабола.`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`x_0 = \frac{-b}{2a}`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`a > 0 → парабола жоғары`,
+        String.raw`a < 0 → парабола төмен`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "y = x² − 4x + 3 функциясының төбесін тап",
+      steps: [
+        String.raw`a=1, b=-4`,
+        String.raw`x_0 = \frac{-(-4)}{2·1} = 2`,
+        String.raw`y(2) = 4 - 8 + 3 = -1`,
+        String.raw`Төбе: (2, -1)`,
+      ],
+      answer: String.raw`(2, -1)`,
+    },
+  ],
+},
+
+{
+  id: "9-arithmetic-progression",
+  title: "Арифметикалық прогрессия",
+  summary: "aₙ формуласы",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Арифметикалық прогрессия — айырмасы тұрақты тізбек.",
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`a_n = a_1 + (n-1)d`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "a₁=3, d=2 болса, a₅ тап",
+      steps: [
+        String.raw`a_5 = 3 + (5-1)·2`,
+        String.raw`a_5 = 3 + 8`,
+        String.raw`a_5 = 11`,
+      ],
+      answer: "11",
+    },
+  ],
+},
+
+
+{
+  id: "9-geometric-progression",
+  title: "Геометриялық прогрессия",
+  summary: "aₙ формуласы",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Геометриялық прогрессия — еселігі тұрақты тізбек.",
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`a_n = a_1 q^{n-1}`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "a₁=2, q=3 болса, a₄ тап",
+      steps: [
+        String.raw`a_4 = 2·3^{3}`,
+        String.raw`a_4 = 2·27`,
+        String.raw`a_4 = 54`,
+      ],
+      answer: "54",
+    },
+  ],
+},
+
+{
+  id: "9-inequalities",
+  title: "Теңсіздіктер",
+  summary: "ax + b > 0",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Теңсіздік — екі өрнектің салыстырылуы.",
+      ],
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        "Теріс санға көбейтсең — белгі өзгереді!",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "-2x > 6 теңсіздігін шеш",
+      steps: [
+        String.raw`x < -3`,
+      ],
+      answer: String.raw`x < -3`,
+    },
+  ],
+},
+
+{
+  id: "9-systems",
+  title: "Жүйелер",
+  summary: "Екі айнымалысы бар теңдеулер",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Жүйе — бірнеше теңдеулердің жиынтығы.",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "x + y = 5, x - y = 1 жүйесін шеш",
+      steps: [
+        String.raw`Қосамыз: 2x = 6`,
+        String.raw`x = 3`,
+        String.raw`y = 2`,
+      ],
+      answer: String.raw`(3, 2)`,
+    },
+  ],
+},
         ],
 
         10: [
           {
-            id: "10-derivative",
-            title: "Туынды (Производная): негіздер",
-            summary: "d/dx(x^n)=n·x^(n-1)",
-            sections: [
-              { h: "Ереже", p: ["d/dx (x^n) = n·x^(n-1)", "d/dx (c) = 0"] },
-            ],
-            example: {
-              q: "d/dx (3x^2)",
-              steps: ["3·d/dx(x^2)", "3·2x = 6x"],
-              ans: "6x",
-            },
-          },
+  id: "10-derivative",
+  title: "Туынды",
+  summary: "f'(x) анықтамасы",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Туынды — функцияның өзгеру жылдамдығы.`,
+        String.raw`Анықтамасы: $f'(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h}$`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`(x^n)' = nx^{n-1}`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`(c)' = 0`,
+        String.raw`(x)' = 1`,
+        String.raw`(cf(x))' = c f'(x)`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "y = x³ функциясының туындысын тап",
+      steps: [
+        String.raw`(x^3)' = 3x^2`,
+      ],
+      answer: String.raw`3x^2`,
+    },
+  ],
+  },
+
+  {
+  id: "10-logarithms",
+  title: "Логарифмдер",
+  summary: "logₐ b",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`log_a b = c ⇔ a^c = b`,
+        String.raw`a>0, a≠1, b>0`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`log_a(xy)=log_a x + log_a y`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`log_a \frac{x}{y} = log_a x - log_a y`,
+        String.raw`log_a x^n = n log_a x`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "log₂ 8 мәнін тап",
+      steps: [
+        String.raw`2^3 = 8`,
+        String.raw`Сондықтан log₂ 8 = 3`,
+      ],
+      answer: "3",
+    },
+  ],
+},
+
+{
+  id: "10-trigonometry",
+  title: "Тригонометрия",
+  summary: "sin, cos, tan",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`sin α = \frac{қарсы}{гипотенуза}`,
+        String.raw`cos α = \frac{жанама}{гипотенуза}`,
+        String.raw`tan α = \frac{қарсы}{жанама}`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`sin^2 α + cos^2 α = 1`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "sin 30° мәнін тап",
+      steps: [
+        String.raw`sin 30° = \frac{1}{2}`,
+      ],
+      answer: String.raw`\frac{1}{2}`,
+    },
+  ],
+},
+
+{
+  id: "10-sequences",
+  title: "Тізбектер",
+  summary: "aₙ формуласы",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Тізбек — белгілі заңдылықпен берілген сандар жиыны.",
+        String.raw`a_n — тізбектің n-ші мүшесі.`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`a_n = f(n)`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        String.raw`Егер a_n = a_{n-1} + d → арифметикалық заңдылық`,
+        String.raw`Егер a_n = a_{n-1}·q → геометриялық заңдылық`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "a_n = 3n - 1 болса, a₅ тап",
+      steps: [
+        String.raw`a_5 = 3·5 - 1`,
+        String.raw`a_5 = 14`,
+      ],
+      answer: "14",
+    },
+  ],
+},
+
+{
+  id: "10-complex-inequalities",
+  title: "Күрделі теңсіздіктер",
+  summary: "Интервал әдісі",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Күрделі теңсіздік — көпмүшелі немесе бөлшекті теңсіздік.",
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`(x-a)(x-b) > 0`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        "Интервал әдісі қолданылады.",
+        "Бөлгіш нөлге тең болмайды!",
+        "Теріс санға көбейтсең — белгі өзгереді!",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "x² − 9 > 0 теңсіздігін шеш",
+      steps: [
+        String.raw`(x-3)(x+3) > 0`,
+        String.raw`x < -3 немесе x > 3`,
+      ],
+      answer: String.raw`(-∞, -3) ∪ (3, ∞)`,
+    },
+  ],
+},
+
+{
+  id: "10-advanced-probability",
+  title: "Ықтималдық (Кеңейтілген)",
+  summary: "Комбинаторика негіздері",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`P(A) = \frac{қолайлы}{барлығы}`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`C_n^k = \frac{n!}{k!(n-k)!}`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "5 адамның ішінен 2 адамды таңдау тәсілдерін тап",
+      steps: [
+        String.raw`C_5^2 = \frac{5!}{2!3!}`,
+        String.raw`= 10`,
+      ],
+      answer: "10",
+    },
+  ],
+},
+
         ],
 
         11: [
           {
-            id: "11-integral",
-            title: "Интеграл: негіздер",
-            summary: "∫x^n dx = x^(n+1)/(n+1) + C",
-            sections: [
-              {
-                h: "Формулалар",
-                p: [
-                  "∫ x^n dx = x^(n+1)/(n+1) + C,  n ≠ -1",
-                  "∫ 1/x dx = ln|x| + C",
-                ],
-              },
-            ],
-            example: {
-              q: "∫ x dx",
-              steps: ["n=1", "x^2/2 + C"],
-              ans: "x^2/2 + C",
-            },
-          },
+  id: "11-derivative-extremum",
+  title: "Туындының қолданылуы (Экстремум)",
+  summary: "f'(x)=0 шарттары",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Экстремум — функцияның максимум немесе минимум нүктесі.",
+        String.raw`Критикалық нүкте: f'(x)=0`,
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`f'(x)=0`,
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        "Туынды + → функция өседі",
+        "Туынды - → функция кемиді",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "y = x² − 4x функциясының экстремумын тап",
+      steps: [
+        String.raw`y' = 2x - 4`,
+        String.raw`2x - 4 = 0`,
+        String.raw`x = 2`,
+        String.raw`y(2) = -4`,
+      ],
+      answer: String.raw`Минимум нүкте: (2, -4)`,
+    },
+  ],
+},
+
+{
+  id: "11-logarithmic-equations",
+  title: "Логарифмдік теңдеулер",
+  summary: "log_a f(x) = b",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`log_a f(x) = b ⇔ f(x)=a^b`,
+        String.raw`a>0, a≠1, f(x)>0`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "log₂ x = 3 теңдеуін шеш",
+      steps: [
+        String.raw`x = 2^3`,
+        String.raw`x = 8`,
+      ],
+      answer: "8",
+    },
+  ],
+},
+
+{
+  id: "11-exponential-equations",
+  title: "Көрсеткіштік теңдеулер",
+  summary: "a^{f(x)} = a^{g(x)}",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        String.raw`Егер a>0, a≠1 болса,`,
+        String.raw`a^{f(x)} = a^{g(x)} ⇔ f(x)=g(x)`,
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "2^{x+1} = 8 теңдеуін шеш",
+      steps: [
+        String.raw`8 = 2^3`,
+        String.raw`x+1=3`,
+        String.raw`x=2`,
+      ],
+      answer: "2",
+    },
+  ],
+},
+
+{
+  id: "11-integral",
+  title: "Интегралды қолдану",
+  summary: "∫ f(x) dx",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Интеграл — туындының кері амалы.",
+      ],
+    },
+
+    {
+      type: "interactive_formula",
+      title: "Негізгі формула",
+      formula: String.raw`\int x^n dx = \frac{x^{n+1}}{n+1} + C`,
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "∫ 3x² dx тап",
+      steps: [
+        String.raw`3 \int x^2 dx`,
+        String.raw`= 3 \cdot \frac{x^3}{3}`,
+        String.raw`= x^3 + C`,
+      ],
+      answer: String.raw`x^3 + C`,
+    },
+  ],
+},
+
+{
+  id: "11-parameter-equations",
+  title: "Параметрлі теңдеулер",
+  summary: "a параметрі бар теңдеу",
+
+  sections: [
+    {
+      type: "definition",
+      title: "Анықтама",
+      content: [
+        "Параметрлі теңдеу — құрамында параметрі бар теңдеу.",
+      ],
+    },
+
+    {
+      type: "remember",
+      title: "Есте сақта!",
+      content: [
+        "Дискриминант параметрге тәуелді болуы мүмкін.",
+      ],
+    },
+
+    {
+      type: "example_steps",
+      title: "Мысал (қадамдап түсіндіру)",
+      task: "x² + ax + 1 = 0 теңдеуінің 1 түбірі болуы үшін a тап",
+      steps: [
+        String.raw`D = a^2 - 4`,
+        String.raw`D = 0`,
+        String.raw`a^2 = 4`,
+        String.raw`a = ±2`,
+      ],
+      answer: String.raw`a = ±2`,
+    },
+  ],
+},
         ],
       };
 
@@ -709,7 +2871,7 @@
           <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl" />
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center py-24 px-6">
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold text-slate-100 leading-tight">
+              <h1 className="text-3xl md:text-5xl font-bold text-slate-100 leading-relaxed">
                 AqylAI — <br />
                 Жасанды интеллектпен бейімделген оқу
               </h1>
@@ -756,6 +2918,8 @@
           </div>
         </section>
       );
+
+      
 
       const GradePicker = ({ open, onClose, onPick }) => {
         if (!open) return null;
@@ -869,7 +3033,6 @@
   (location.hostname === "127.0.0.1" || location.hostname === "localhost")
     ? "http://127.0.0.1:8000/api/ai"
     : "https://backend-umur.onrender.com/api/ai";
-
 
         const chatRef = useRef(null);
 
@@ -1027,10 +3190,14 @@
             {/* current task */}
             <div className="mt-3 p-4 rounded-2xl bg-slate-950/30 border border-white/10">
               <div className="text-slate-400 text-sm">Қазіргі тапсырма</div>
+
               <div
                 className="mt-2 text-slate-100 text-xl"
-                dangerouslySetInnerHTML={{ __html: renderTask(task?.q) }}
+                dangerouslySetInnerHTML={{
+                  __html: renderTask(task?.q),
+                }}
               />
+
               <div className="mt-2 text-slate-400 text-sm">
                 Жауабыңыз:{" "}
                 <span className="text-slate-200">
@@ -1131,102 +3298,385 @@
         );
       };
 
-      const ProfileView = ({ onBack, onGoTasks }) => {
-        const [name, setName] = useState(
-          localStorage.getItem("aqylai_name") || "Оқушы",
-        );
-        const [grade, setGrade] = useState(
-          Number(localStorage.getItem("aqylai_grade") || 8),
-        );
-        const [goal, setGoal] = useState(
-          localStorage.getItem("aqylai_goal") || "ҰБТ-ға дайындық",
-        );
+const ProfileView = ({ onBack, onGoTasks }) => {
+  const currentUser = localStorage.getItem("aqylai_current_user");
 
-        const save = () => {
-          localStorage.setItem("aqylai_name", name);
-          localStorage.setItem("aqylai_grade", String(grade));
-          localStorage.setItem("aqylai_goal", goal);
-          alert("Сақталды ✅");
-        };
+  const [name, setName] = useState(currentUser || "Оқушы");
+  const [editing, setEditing] = useState(false);
 
-        return (
-          <div className="max-w-4xl mx-auto pt-[110px] pb-10 px-4">
-            <div className="flex items-center justify-between gap-4">
-              <button
-                onClick={onBack}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200"
-              >
-                ← Артқа
-              </button>
+  const grade = Number(localStorage.getItem("aqylai_grade") || 8);
+  const topics = TASK_BANK[grade] || {};
 
-              <div className="text-slate-200 text-sm px-3 py-2 rounded-xl bg-slate-800/60 border border-white/10">
-                Профиль
-              </div>
+  const topicStats = Object.entries(topics).map(([key, topicData]) => {
+    const raw = localStorage.getItem(
+      `aqylai_progress_${grade}_${key}`
+    );
+
+    const total =
+      (topicData.easy?.length || 0) +
+      (topicData.medium?.length || 0) +
+      (topicData.hard?.length || 0);
+
+    if (!raw)
+      return { title: topicData.title, solved: 0, total, zpd: 0 };
+
+    const parsed = JSON.parse(raw);
+
+    return {
+      title: topicData.title,
+      solved: parsed.solved || 0,
+      total,
+      zpd: parsed.zpd || 0,
+    };
+  });
+
+  const totalSolved = topicStats.reduce((s, t) => s + t.solved, 0);
+  const totalTasks = topicStats.reduce((s, t) => s + t.total, 0);
+
+  const overallPercent =
+    totalTasks > 0
+      ? Math.round((totalSolved / totalTasks) * 100)
+      : 0;
+
+  const avgZpd =
+    topicStats.length > 0
+      ? Math.round(
+          topicStats.reduce((s, t) => s + t.zpd, 0) /
+            topicStats.length
+        )
+      : 0;
+
+  // XP система
+  const xp = totalSolved * 10 + avgZpd * 2;
+
+  const levels = [
+    { name: "Beginner", min: 0 },
+    { name: "Explorer", min: 300 },
+    { name: "Challenger", min: 800 },
+    { name: "Advanced", min: 1500 },
+    { name: "Master", min: 2500 },
+  ];
+  useEffect(() => {
+  const history =
+    JSON.parse(localStorage.getItem("aqylai_growth") || "[]");
+
+  const today = new Date().toLocaleDateString();
+
+  if (!history.find((h) => h.date === today)) {
+    history.push({ date: today, xp });
+    localStorage.setItem(
+      "aqylai_growth",
+      JSON.stringify(history.slice(-7))
+    );
+  }
+}, [xp]);
+
+const Leaderboard = ({ xp, name }) => {
+  const key = "aqylai_leaderboard";
+  const [leaders, setLeaders] = useState([]);
+
+  useEffect(() => {
+    let board = JSON.parse(localStorage.getItem(key) || "[]");
+
+    const existing = board.find((u) => u.name === name);
+
+    if (!existing || existing.xp < xp) {
+      board = board.filter((u) => u.name !== name);
+      board.push({ name, xp });
+      board.sort((a, b) => b.xp - a.xp);
+      board = board.slice(0, 5);
+      localStorage.setItem(key, JSON.stringify(board));
+    }
+
+    setLeaders(board);
+  }, [xp, name]);
+
+  return (
+    <div className="p-6 rounded-2xl bg-slate-900/60 border border-white/10">
+      <div className="text-lg font-semibold mb-4">
+        🌍 Leaderboard
+      </div>
+
+      {leaders.map((u, i) => (
+        <div key={i} className="flex justify-between py-1">
+          <span>
+            {i + 1}. {u.name}
+          </span>
+          <span>{u.xp} XP</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const WeeklyGoals = ({ totalSolved }) => {
+  const goal = 20;
+  const percent = Math.min(
+    100,
+    Math.round((totalSolved / goal) * 100)
+  );
+
+  return (
+    <div className="p-6 rounded-2xl bg-slate-900/60 border border-white/10">
+      <div className="text-lg font-semibold mb-3">
+        🎯 Апталық мақсат
+      </div>
+
+      <div>{totalSolved}/{goal} тапсырма</div>
+
+      <div className="mt-2 w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+        <div
+          className="bg-pink-500 h-3"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
+const AIReport = ({ xp, avgZpd }) => {
+  let message = "Сен бастаушы деңгейдесің.";
+
+  if (xp > 800)
+    message =
+      "Сен тез дамып жатырсың. Келесі деңгейге аз қалды.";
+  if (avgZpd > 70)
+    message =
+      "Сенің ZPD жоғары. Күрделі тапсырмаларға дайынсың.";
+
+  return (
+    <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-400/20">
+      <div className="font-semibold mb-2">
+        🤖 AI Талдау
+      </div>
+      <div className="text-slate-300">{message}</div>
+    </div>
+  );
+};
+const isPro =
+  localStorage.getItem("aqylai_pro") === "true";
+  {isPro && (
+  <div className="px-3 py-1 rounded-full bg-yellow-500 text-black text-xs">
+    PRO
+  </div>
+)}
+<button
+  onClick={() => {
+    localStorage.setItem("aqylai_pro", "true");
+    window.location.reload();
+  }}
+  className="mt-4 w-full py-2 bg-yellow-500 text-black rounded-xl"
+>
+  💎 Активировать PRO
+</button>
+
+
+  const currentLevel =
+    levels
+      .slice()
+      .reverse()
+      .find((l) => xp >= l.min) || levels[0];
+
+  const nextLevel =
+    levels.find((l) => l.min > currentLevel.min) || null;
+
+  const levelProgress = nextLevel
+    ? Math.min(
+        100,
+        Math.round(
+          ((xp - currentLevel.min) /
+            (nextLevel.min - currentLevel.min)) *
+            100
+        )
+      )
+    : 100;
+
+  // Streak
+  const streak =
+    Number(localStorage.getItem("aqylai_streak") || 3);
+
+  const badges = [
+    totalSolved >= 10 && "🔥 10 тапсырма",
+    avgZpd >= 70 && "🧠 ZPD Pro",
+    overallPercent >= 50 && "📈 50% Progress",
+    streak >= 5 && "⚡ 5 күн қатарынан",
+  ].filter(Boolean);
+
+  const saveName = () => {
+    localStorage.setItem("aqylai_name", name);
+    setEditing(false);
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto pt-[120px] pb-20 px-6">
+
+      <button
+        onClick={onBack}
+        className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200"
+      >
+        ← Артқа
+      </button>
+
+      <div className="mt-8 grid md:grid-cols-3 gap-8">
+
+        {/* LEFT PANEL */}
+        <div className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 space-y-6">
+
+          {/* Avatar */}
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center text-2xl">
+              🧠
             </div>
 
-            <div className="mt-6 p-6 rounded-2xl bg-slate-800/70 border border-white/10">
-              <h2 className="text-2xl font-bold text-slate-100">
-                Жеке профиль
-              </h2>
-              <p className="mt-2 text-slate-300 text-sm">
-                Бұл демо профиль: аты-жөні, сынып, мақсат. Деректер браузерде
-                сақталады (localStorage).
-              </p>
-
-              <div className="mt-6 grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm text-slate-300">Атыңыз</label>
+            <div>
+              {editing ? (
+                <div className="flex gap-2">
                   <input
-                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    className="px-3 py-1 rounded-lg bg-slate-800 text-white"
                   />
-                </div>
-
-                <div>
-                  <label className="text-sm text-slate-300">Сынып</label>
-                  <select
-                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
-                    value={grade}
-                    onChange={(e) => setGrade(Number(e.target.value))}
+                  <button
+                    onClick={saveName}
+                    className="px-2 bg-emerald-500 text-black rounded"
                   >
-                    {[7, 8, 9, 10, 11].map((g) => (
-                      <option key={g} value={g}>
-                        {g}-сынып
-                      </option>
-                    ))}
-                  </select>
+                    ✓
+                  </button>
                 </div>
-
-                <div className="md:col-span-2">
-                  <label className="text-sm text-slate-300">Мақсат</label>
-                  <input
-                    className="mt-2 w-full px-3 py-2 rounded-xl bg-slate-900/70 border border-white/10 text-slate-100"
-                    value={goal}
-                    onChange={(e) => setGoal(e.target.value)}
-                  />
+              ) : (
+                <div
+                  onClick={() => setEditing(true)}
+                  className="text-xl font-bold cursor-pointer"
+                >
+                  {name}
                 </div>
-              </div>
-
-              <div className="mt-6 flex gap-2 flex-wrap">
-                <button
-                  onClick={save}
-                  className="px-5 py-2 rounded-xl bg-emerald-500 text-slate-900 font-semibold"
-                >
-                  Сақтау
-                </button>
-
-                <button
-                  onClick={() => onGoTasks?.(grade)}
-                  className="px-5 py-2 rounded-xl bg-indigo-500 text-white font-semibold"
-                >
-                  {grade}-сынып тапсырмаларына өту
-                </button>
+              )}
+              <div className="text-sm text-slate-400">
+                {grade}-сынып
               </div>
             </div>
           </div>
-        );
-      };
+
+          {/* Level */}
+          <div>
+            <div className="text-sm text-slate-400">
+              Деңгей
+            </div>
+            <div className="text-lg font-bold text-emerald-400">
+              {currentLevel.name}
+            </div>
+
+            <div className="mt-2 w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+              <div
+                className="bg-indigo-500 h-3"
+                style={{ width: `${levelProgress}%` }}
+              />
+            </div>
+
+            <div className="text-xs text-slate-400 mt-1">
+              {xp} XP
+            </div>
+          </div>
+
+          {/* Streak */}
+          <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-400/20">
+            🔥 {streak} күн қатарынан
+          </div>
+
+          <button
+            onClick={() => onGoTasks(grade)}
+            className="w-full py-3 rounded-xl bg-emerald-500 text-black font-semibold"
+          >
+            Жалғастыру
+          </button>
+          <button
+  onClick={() => {
+    localStorage.removeItem("aqylai_current_user");
+    window.location.reload();
+  }}
+  className="w-full py-2 bg-rose-500 text-white rounded-xl"
+>
+  Шығу
+</button>
+        </div>
+
+        {/* RIGHT PANEL */}
+        <div className="md:col-span-2 space-y-8">
+
+          {/* Stats */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <StatCard title="Жалпы прогресс" value={`${overallPercent}%`} />
+            <StatCard title="Орташа ZPD" value={`${avgZpd}%`} />
+            <StatCard title="XP" value={xp} />
+            <GrowthChart />
+<Leaderboard xp={xp} name={name} />
+<WeeklyGoals totalSolved={totalSolved} />
+<AIReport xp={xp} avgZpd={avgZpd} />
+          </div>
+
+          
+
+          {/* Badges */}
+          <div>
+            <div className="text-xl font-semibold mb-4">
+              Бейдждер
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {badges.length === 0 && (
+                <div className="text-slate-400">
+                  Әлі бейдж жоқ
+                </div>
+              )}
+              {badges.map((b, i) => (
+                <div
+                  key={i}
+                  className="px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-400/30"
+                >
+                  {b}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Topic Progress */}
+          <div>
+            <div className="text-xl font-semibold mb-4">
+              Тақырыптар
+            </div>
+            <div className="space-y-4">
+              {topicStats.map((t, i) => {
+                const percent =
+                  t.total > 0
+                    ? Math.round((t.solved / t.total) * 100)
+                    : 0;
+
+                return (
+                  <div
+                    key={i}
+                    className="p-4 rounded-xl bg-slate-800/60 border border-white/10"
+                  >
+                    <div className="flex justify-between">
+                      <span>{t.title}</span>
+                      <span>{percent}%</span>
+                    </div>
+
+                    <div className="mt-2 w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                      <div
+                        className="bg-emerald-500 h-2"
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
 
       const TheoryView = ({
         grade,
@@ -1272,6 +3722,73 @@
               .replace(/</g, "&lt;")
               .replace(/>/g, "&gt;");
           }
+        };
+        const escapeHtml = (str) =>
+          String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        const renderInlineMath = (s) => {
+          const text = String(s);
+
+          // делим строку на части: обычный текст и $формула$
+          const parts = text.split(/(\$[^$]+\$)/g).filter(Boolean);
+
+          return parts
+            .map((p) => {
+              if (p.startsWith("$") && p.endsWith("$")) {
+                const latex = p.slice(1, -1);
+                try {
+                  return katex.renderToString(latex, { throwOnError: false });
+                } catch {
+                  return escapeHtml(p);
+                }
+              }
+              return escapeHtml(p);
+            })
+            .join("");
+        };
+
+        const isMathLike = (s) => /\\|=|\^|_/.test(String(s));
+
+        const renderMixed = (s) => {
+          const text = String(s);
+
+          // ✅ Если в строке есть $...$ — значит это "текст + математика"
+          // Рендерим только части внутри $...$
+          if (text.includes("$")) return renderInlineMath(text);
+
+          // ✅ Если строка реально формула (без обычного текста)
+          // (обычно начинается с \ или состоит из "математических" символов)
+          const looksLikePureFormula =
+            /^[\s\\0-9a-zA-Z+\-*/^_=(){}\[\].,|:]+$/.test(text) &&
+            /\\|=|\^|_/.test(text);
+
+          if (looksLikePureFormula) {
+            try {
+              return katex.renderToString(text, { throwOnError: false });
+            } catch {
+              return escapeHtml(text);
+            }
+          }
+
+          // ✅ Иначе обычный текст
+          return escapeHtml(text);
+        };
+
+        const renderFormula = (formula) => {
+          return (
+            <div
+              className="text-2xl text-white"
+              dangerouslySetInnerHTML={{
+                __html: katex.renderToString(formula, {
+                  throwOnError: false,
+                  displayMode: true,
+                }),
+              }}
+            />
+          );
         };
 
         return (
@@ -1366,28 +3883,138 @@
                       </div>
                     )}
 
-                    <div className="mt-5 space-y-4">
-                      {(activeLesson.sections || []).map((sec, i) => (
-                        <div
-                          key={i}
-                          className="p-4 rounded-2xl bg-slate-800/60 border border-white/10"
-                        >
-                          <div className="text-slate-100 font-semibold">
-                            {sec.h}
-                          </div>
-                          <ul className="mt-2 space-y-2">
-                            {(sec.p || []).map((line, j) => (
-                              <li
-                                key={j}
-                                className="text-slate-100"
+                    <div className="mt-5 space-y-6">
+                      {(activeLesson.sections || []).map((sec, i) => {
+                        // === АНЫҚТАМА ===
+                        if (sec.type === "definition") {
+                          return (
+                            <div
+                              key={i}
+                              className="p-6 rounded-3xl bg-slate-900/60 border border-white/10 backdrop-blur-xl shadow-xl"
+                            >
+                              <h4 className="text-lg font-semibold text-emerald-400 mb-4">
+                                {sec.title}
+                              </h4>
+
+                              <ul className="space-y-3">
+                                {(sec.content || []).map((line, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="tracking-wide text-slate-200"
+                                    dangerouslySetInnerHTML={{
+                                      __html: renderMixed(line),
+                                    }}
+                                  />
+                                ))}
+                              </ul>
+                            </div>
+                          );
+                        }
+
+                        // === ЕСТЕ САҚТА ===
+                        if (sec.type === "remember") {
+                          return (
+                            <div
+                              key={i}
+                              className="p-6 rounded-3xl bg-indigo-500/10 border border-indigo-500/30 backdrop-blur-xl shadow-lg"
+                            >
+                              <h4 className="text-lg font-semibold text-indigo-400 mb-4">
+                                {sec.title}
+                              </h4>
+
+                              <ol className="list-decimal pl-6 space-y-3 text-slate-300 leading-relaxed text-base">
+                                {sec.content.map((line, idx) => (
+                                  <li
+                                    key={idx}
+                                    className="tracking-wide"
+                                    dangerouslySetInnerHTML={{
+                                      __html: renderMixed(line),
+                                    }}
+                                  />
+                                ))}
+                              </ol>
+                            </div>
+                          );
+                        }
+
+                        if (sec.type === "interactive_formula") {
+                          return (
+                            <div
+                              key={i}
+                              className="p-6 rounded-3xl bg-gradient-to-br from-slate-900/70 to-slate-800/40 border border-cyan-500/20 backdrop-blur-xl shadow-xl"
+                            >
+                              <h4 className="text-base font-semibold text-amber-400 mb-3 tracking-wide">
+                                {sec.title}
+                              </h4>
+
+                              <div className="flex justify-center">
+                                <div
+                                  className="px-6 py-5 rounded-2xl bg-slate-950/50 border border-amber-400/20 text-white text-lg font-medium"
+                                  dangerouslySetInnerHTML={{
+                                    __html: katex.renderToString(sec.formula, {
+                                      throwOnError: false,
+                                      displayMode: true,
+                                    }),
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        if (sec.type === "example_steps") {
+                          return (
+                            <div
+                              key={i}
+                              className="p-6 rounded-3xl bg-emerald-500/10 border border-emerald-500/30 backdrop-blur-xl shadow-xl"
+                            >
+                              <h4 className="text-lg font-semibold text-emerald-300 mb-4">
+                                {sec.title}
+                              </h4>
+
+                              <div className="text-slate-300 text-sm mb-2">
+                                Тапсырма:
+                              </div>
+                              <div
+                                className="text-xl text-white mb-4"
                                 dangerouslySetInnerHTML={{
-                                  __html: renderLatex("• " + line),
+                                  __html: katex.renderToString(sec.task, {
+                                    throwOnError: false,
+                                  }),
                                 }}
                               />
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+
+                              <div className="text-slate-300 text-sm mb-2">
+                                Қадамдар:
+                              </div>
+                              <ol className="list-decimal pl-6 space-y-3 text-slate-200">
+                                {sec.steps.map((line, idx) => (
+                                  <li
+                                    key={idx}
+                                    dangerouslySetInnerHTML={{
+                                      __html: renderMixed(line),
+                                    }}
+                                  />
+                                ))}
+                              </ol>
+
+                              <div className="mt-5 p-4 rounded-2xl bg-slate-950/30 border border-white/10">
+                                <div className="text-slate-300 text-sm">
+                                  Жауап:
+                                </div>
+                                <div
+                                  className="text-xl text-white mt-1"
+                                  dangerouslySetInnerHTML={{
+                                    __html: renderMixed(sec.answer),
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return null;
+                      })}
                     </div>
 
                     {activeLesson.example && (
@@ -1715,6 +4342,51 @@
         );
       };
 
+      const AboutView = ({ onBack }) => {
+        return (
+          <div className="max-w-6xl mx-auto pt-[110px] pb-20 px-6">
+            <button
+              onClick={onBack}
+              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200"
+            >
+              ← Артқа
+            </button>
+
+            <h1 className="mt-8 text-4xl font-bold text-white">
+              AqylAI туралы
+            </h1>
+
+            <p className="mt-6 text-slate-300 text-lg leading-relaxed max-w-3xl">
+              AqylAI — бұл жасанды интеллектке негізделген бейімделмелі оқу
+              жүйесі. Платформа оқушының деңгейін талдап, тапсырмаларды
+              автоматты түрде EASY → MEDIUM → HARD деңгейлері арасында
+              бейімдейді.
+            </p>
+
+            <div className="mt-10 grid md:grid-cols-2 gap-8">
+              <div className="p-6 rounded-2xl bg-slate-800/70 border border-white/10">
+                <h3 className="text-xl font-semibold text-white">
+                  Біздің мақсатымыз
+                </h3>
+                <p className="mt-3 text-slate-300">
+                  Қазақстан оқушыларына сапалы, интеллектуалды және қолжетімді
+                  дайындық платформасын ұсыну.
+                </p>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-slate-800/70 border border-white/10">
+                <h3 className="text-xl font-semibold text-white">
+                  Негізгі технология
+                </h3>
+                <p className="mt-3 text-slate-300">
+                  ZPD индексі, адаптивті алгоритм және AI көмекші.
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
       function AqyAIApp() {
         const [visible, setVisible] = useState(false);
 
@@ -1769,13 +4441,17 @@
         const atRoot = router.path === "/";
         const atProfile = router.path === "/profile";
 
-        const match = router.path.match(/grade-(\d+)/);
-        const selectedGrade = match ? Number(match[1]) : null;
+        const atAbout = router.path === "/about";
 
-        const topicMatch = router.path.match(/topic-([^\/]+)/);
+        const gradeMatch = router.path.match(/\/c\/aqylai\/grade-(\d+)/);
+        const selectedGrade = gradeMatch ? Number(gradeMatch[1]) : null;
+
+        const topicMatch = router.path.match(/\/topic-([^\/]+)/);
         const selectedTopic = topicMatch
           ? decodeURIComponent(topicMatch[1])
           : null;
+
+        const isTopicsPage = /\/topics$/.test(router.path);
 
         const theoryMatch = router.path.match(
           /^\/c\/aqylai\/theory-(\d+)(?:\/([\w-]+))?$/,
@@ -1802,6 +4478,66 @@
           router.push(makeTheoryPath(g));
         };
 
+        function InteractiveDemo() {
+  const [level, setLevel] = React.useState("EASY");
+
+  return (
+  <div className="
+  relative
+  backdrop-blur-2xl
+  bg-white/5
+  border border-white/10
+  rounded-[40px]
+  p-10
+  shadow-[0_30px_80px_rgba(16,185,129,0.15)]
+  transition-all duration-500
+  hover:shadow-[0_40px_120px_rgba(16,185,129,0.35)]
+">
+  <div className="absolute -inset-1 rounded-[40px] bg-emerald-500/5 blur-2xl -z-10"></div>
+
+      <div className="mb-6 text-slate-400 text-sm tracking-widest">
+        LIVE ADAPTIVE DEMO
+      </div>
+
+      <div className="text-3xl font-semibold text-white mb-6">
+        Current Level:
+        <span className="ml-3 text-emerald-400">{level}</span>
+      </div>
+
+      <div className="flex gap-4">
+        <button
+          onClick={() => setLevel("EASY")}
+          className="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/40 text-white transition"
+        >
+          Easy
+        </button>
+
+        <button
+          onClick={() => setLevel("MEDIUM")}
+          className="px-4 py-2 rounded-xl bg-yellow-500/20 hover:bg-yellow-500/40 text-white transition"
+        >
+          Medium
+        </button>
+
+        <button
+          onClick={() => setLevel("HARD")}
+          className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/40 text-white transition"
+        >
+          Hard
+        </button>
+      </div>
+
+      <div className="mt-8 text-slate-400 text-lg">
+        {level === "EASY" && "Жеңіл тапсырмалар көрсетіледі."}
+        {level === "MEDIUM" && "Орташа деңгей автоматты түрде ұсынылады."}
+        {level === "HARD" && "Қиын есептер мен терең түсіндіру."}
+      </div>
+
+    </div>
+  );
+}
+
+
         return (
           <div className="min-h-screen text-white/90 pt-27">
             <TopNav router={router} />
@@ -1809,6 +4545,38 @@
             {atRoot && (
               <>
                 <Hero onStart={() => setGradeModal(true)} />
+                  <section className="relative h-screen flex items-center bg-gradient-to-b from-[#06141d] to-[#071a24] overflow-hidden">
+
+  {/* Parallax Glow */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="glow"></div>
+  </div>
+
+  <div className="relative max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-20">
+
+    {/* LEFT TEXT */}
+    <div>
+     <h2 className="text-6xl font-semibold leading-tight mb-8">
+  Дәстүрлі жүйе
+  <br />
+  <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+    әр оқушыға бейімделмейді.
+  </span>
+</h2>
+
+      <p className="text-slate-400 text-xl leading-relaxed">
+        Бірдей тапсырма.  
+        Бірдей түсіндіру.  
+        Әртүрлі нәтиже.
+      </p>
+    </div>
+
+    {/* RIGHT DEMO */}
+    <InteractiveDemo />
+
+  </div>
+</section>
+
                 <section
                   id="about"
                   className="py-32 relative overflow-hidden bg-gradient-to-b from-[#0d1b2a] via-[#0b1f2f] to-[#06141d]"
@@ -1816,21 +4584,24 @@
                   <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.15),transparent_70%)]" />
 
                   <div className="relative max-w-7xl mx-auto px-6">
-                    <h2 className="text-5xl font-bold text-center mb-24 text-white">
+                    <h2 className="text-4xl font-bold text-center mb-20 text-white">
                       AqylAI-дың басты артықшылықтары
                     </h2>
 
                     <div className="relative flex items-center justify-center">
-                      {/* LEFT BUTTON */}
-                      <button
-                        onClick={prevCard}
-                        className="absolute right-0 z-30 w-14 h-14 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 flex items-center justify-center text-xl text-white hover:bg-slate-700 transition"
-                      >
-                        →
-                      </button>
+                  {/* LEFT BUTTON */}
+                    <button
+                      onClick={prevCard}
+                      className="absolute left-0 z-30 w-14 h-14 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 flex items-center justify-center text-xl text-white hover:bg-slate-700 transition"
+                    >
+                      ←
+                    </button>
 
                       {/* CARDS WRAPPER */}
-                      <div className="relative w-[900px] h-[500px] flex items-center justify-center overflow-hidden">
+                  <div
+  className="relative w-full max-w-[1200px] h-[560px] flex items-center justify-center overflow-visible"
+  style={{ perspective: "1800px" }}
+>
                         {[
                           {
                             title: "Адаптивті деңгей",
@@ -1863,8 +4634,14 @@
                               "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
                           },
                         ].map((card, index) => {
-                          const position =
-                            (index - activeCard + cardsCount) % cardsCount;
+                        const raw = index - activeCard;
+
+                        const position =
+                          raw > cardsCount / 2
+                            ? raw - cardsCount
+                            : raw < -cardsCount / 2
+                            ? raw + cardsCount
+                            : raw;
 
                           let transform = "";
                           let zIndex = 0;
@@ -1898,7 +4675,7 @@
                               className="absolute w-[420px] h-[520px] rounded-[40px] overflow-hidden
                 border border-white/10
                 shadow-[0_40px_120px_rgba(0,0,0,0.6)]
-                transition-all duration-700 ease-in-out"
+              transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)]"
                               style={{
                                 transform,
                                 zIndex,
@@ -1929,16 +4706,18 @@
                         })}
                       </div>
 
-                      {/* RIGHT BUTTON */}
-                      <button
-                        onClick={nextCard}
-                        className="absolute left-0 z-30 w-14 h-14 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 flex items-center justify-center text-xl text-white hover:bg-slate-700 transition"
-                      >
-                        ←
-                      </button>
+                                    {/* RIGHT BUTTON */}
+                  <button
+                    onClick={nextCard}
+                    className="absolute right-0 z-30 w-14 h-14 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 flex items-center justify-center text-xl text-white hover:bg-slate-700 transition"
+                  >
+                    →
+                  </button>   
                     </div>
                   </div>
                 </section>
+
+                
 
                 <section
                   id="results"
@@ -1947,7 +4726,10 @@
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.15),transparent_70%)]" />
 
                   <div className="relative max-w-6xl mx-auto px-6 text-center">
-                    <h2 className="text-5xl font-bold text-white mb-20 tracking-tight">
+                    <h2
+                      className="text-5xl font-semibold
+ text-white mb-16 tracking-tight"
+                    >
                       Нәтижелер
                     </h2>
 
@@ -2017,6 +4799,8 @@
                   id="contact"
                   className="relative py-40 overflow-hidden bg-gradient-to-b from-[#06141d] via-[#071a24] to-[#0b1f2f]"
                 >
+
+                
                   {/* Glow background */}
                   <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-emerald-500/10 rounded-full blur-[180px]" />
                   <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px]" />
@@ -2029,7 +4813,7 @@
 
                     {/* Glass Card */}
                     <div className="relative p-14 rounded-[40px] bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.6)]">
-                      <p className="text-2xl md:text-3xl text-slate-200 leading-relaxed font-light">
+                      <p className="text-xl md:text-2xl text-slate-300 leading-loose font-light">
                         Қазақстандағы әрбір оқушыға{" "}
                         <span className="text-emerald-400 font-semibold">
                           интеллектуалды
@@ -2067,6 +4851,109 @@
                     </div>
                   </div>
                 </section>
+
+                <section className="relative py-40 bg-gradient-to-b from-[#06141d] via-[#071a24] to-[#06141d] overflow-visible">
+
+  {/* Emerald ambient glow */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12),transparent_70%)] pointer-events-none"></div>
+
+  <div className="relative max-w-6xl mx-auto px-6">
+
+    {/* Header */}
+    <div className="text-center mb-32">
+      <p className="text-sm tracking-[0.3em] text-emerald-400/70 mb-6">
+        PROBLEM → SOLUTION
+      </p>
+
+      <h2 className="text-5xl md:text-6xl font-semibold text-white leading-tight">
+        Дәстүрлі жүйе
+        <br />
+        <span className="text-slate-400">
+          әр оқушыны жеке түсінбейді.
+        </span>
+      </h2>
+    </div>
+
+    {/* Content */}
+    <div className="grid md:grid-cols-2 gap-28">
+
+      {/* LEFT */}
+      <div className="space-y-20">
+
+        <div className="opacity-0 translate-y-8 animate-fadeIn">
+          <h3 className="text-2xl font-medium text-white mb-4">
+            Бірдей тапсырма
+          </h3>
+          <p className="text-slate-400 text-lg leading-relaxed">
+            Барлық оқушыға бірдей деңгей.
+            Нәтижесінде кейбірі артта қалады.
+          </p>
+        </div>
+
+        <div className="opacity-0 translate-y-8 animate-fadeIn delay-200">
+          <h3 className="text-2xl font-medium text-white mb-4">
+            Қате түсіндірілмейді
+          </h3>
+          <p className="text-slate-400 text-lg leading-relaxed">
+            Жауап дұрыс емес.
+            Бірақ нақты қай жерде қате кеткені белгісіз.
+          </p>
+        </div>
+
+        <div className="opacity-0 translate-y-8 animate-fadeIn delay-300">
+          <h3 className="text-2xl font-medium text-white mb-4">
+            Даму көрінбейді
+          </h3>
+          <p className="text-slate-400 text-lg leading-relaxed">
+            Прогресс нақты өлшенбейді.
+            Мотивация төмендейді.
+          </p>
+        </div>
+
+      </div>
+
+      {/* RIGHT */}
+      <div className="space-y-20">
+
+        <div className="opacity-0 translate-y-8 animate-fadeIn delay-100">
+          <h3 className="text-2xl font-medium text-emerald-400 mb-4">
+            AqylAI адаптивті алгоритмі
+          </h3>
+          <p className="text-slate-400 text-lg leading-relaxed">
+            Жүйе оқушының деңгейін талдайды.
+            EASY → MEDIUM → HARD динамикалық ауысады.
+          </p>
+        </div>
+
+        <div className="opacity-0 translate-y-8 animate-fadeIn delay-200">
+          <h3 className="text-2xl font-medium text-emerald-400 mb-4">
+            Қадамдық AI түсіндіру
+          </h3>
+          <p className="text-slate-400 text-lg leading-relaxed">
+            ЖИ нақты қате кеткен қадамды көрсетеді
+            және бағыт береді.
+          </p>
+        </div>
+
+        <div className="opacity-0 translate-y-8 animate-fadeIn delay-300">
+          <h3 className="text-2xl font-medium text-emerald-400 mb-4">
+            ZPD индекс
+          </h3>
+          <p className="text-slate-400 text-lg leading-relaxed">
+            Жақын даму аймағы есептеледі.
+            Прогресс нақты көрінеді.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+
               </>
             )}
 
@@ -2077,8 +4964,8 @@
               />
             )}
             {selectedGrade &&
+              isTopicsPage &&
               !selectedTopic &&
-              router.path.includes("/topics") &&
               !theoryGrade && (
                 <TopicsView
                   grade={selectedGrade}
@@ -2090,6 +4977,8 @@
                   }
                 />
               )}
+
+            {atAbout && <AboutView onBack={() => router.push("/")} />}
 
             {selectedGrade && selectedTopic && !theoryGrade && (
               <TasksView
@@ -2125,47 +5014,6 @@
       root.render(<AqyAIApp />);
     </script>
 
-    <!-- <div class="flex items-center">
-                <div
-                  class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4"
-                >
-                  <svg
-                    class="w-6 h-6 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div class="font-semibold text-gray-800">Байланыс</div>
-                  <div class="text-gray-600">+7 (777) 77 77 77</div>
-                </div>
-              </div>
-
-              <div class="flex items-center">
-                <div
-                  class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4"
-                >
-                  <svg
-                    class="w-6 h-6 text-purple-600"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div class="font-semibold text-gray-800">Адрес</div>
-                  <div class="text-gray-600">Туркестан, Казакстан</div>
-                </div>
-              </div>
-            </div> -->
-
     <section class="py-20 bg-[#06141d] text-white font-sans">
       <div class="container mx-auto px-6">
         <div
@@ -2191,7 +5039,7 @@
                 <span class="text-[#10b981]">ашқыңыз келе ме?</span>
               </h2>
 
-              <p class="text-lg text-gray-400 mb-8 max-w-md leading-relaxed">
+              <p class="text-base text-gray-400 leading-relaxed">
                 Біз сіздің барлық сұрағыңызға жауап береміз. Төмендегі форманы
                 толтырсаңыз, менеджер сізбен байланысқа шығады.
               </p>
@@ -2292,10 +5140,11 @@
               <ul class="space-y-4 text-sm">
                 <li>
                   <a
-                    href="#"
+                    href="#/about"
                     class="hover:text-[#10b981] transition-colors duration-300"
-                    >Біз туралы</a
                   >
+                    Біз туралы
+                  </a>
                 </li>
                 <li>
                   <a
@@ -2409,9 +5258,6 @@
         </div>
       </footer>
     </section>
+    
   </body>
-</html>
-
-
-
-
+</html
